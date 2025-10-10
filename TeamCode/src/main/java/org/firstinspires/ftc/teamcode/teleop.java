@@ -73,7 +73,7 @@ public class teleop extends LinearOpMode {
     private DcMotor bl = null;
     private DcMotor fr = null;
     private DcMotor br = null;
-    private DcMotorEx intake = null;
+    private DcMotor intake = null;
 
     @Override
     public void runOpMode() {
@@ -84,7 +84,7 @@ public class teleop extends LinearOpMode {
         bl = hardwareMap.get(DcMotor.class, "bl");
         fr = hardwareMap.get(DcMotor.class, "fr");
         br = hardwareMap.get(DcMotor.class, "br");
-        intake = hardwareMap.get(DcMotorEx.class, "intake");
+        intake = hardwareMap.get(DcMotor.class, "intake");
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -113,7 +113,7 @@ public class teleop extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             if (gamepad2.left_trigger > 0.4) {
-                intake.setVelocity(50);
+                intake.setPower(0.5);
             }
 
 
