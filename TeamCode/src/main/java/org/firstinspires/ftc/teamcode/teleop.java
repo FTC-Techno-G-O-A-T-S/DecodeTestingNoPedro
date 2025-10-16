@@ -127,6 +127,10 @@ public class teleop extends LinearOpMode {
 
             if (gamepad2.right_trigger > 0.4) {
                 outtake.setVelocity(3000);
+            } if (gamepad2.dpad_down) {
+                outtake.setVelocity(2000);
+            } if (gamepad2.dpad_up) {
+                outtake.setVelocity(2500);
             } else {
                 outtake.setVelocity(0);
             }
