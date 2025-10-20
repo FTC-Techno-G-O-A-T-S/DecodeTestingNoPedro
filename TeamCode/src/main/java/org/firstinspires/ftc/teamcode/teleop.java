@@ -131,6 +131,10 @@ public class teleop extends LinearOpMode {
                 outtake.setVelocity(2000);
             } if (gamepad2.dpad_up) {
                 outtake.setVelocity(2500);
+            } else if (gamepad2.dpad_left) {
+                outtake.setPower(0.8);
+            } else if (gamepad2.dpad_right) {
+                outtake.setPower(1);
             } else {
                 outtake.setVelocity(0);
             }
