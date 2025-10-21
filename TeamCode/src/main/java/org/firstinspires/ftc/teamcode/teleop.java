@@ -70,11 +70,11 @@ public class teleop extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor fl = null;
+   // private DcMotor fl = null;
     private DcMotor bl = null;
     private DcMotor fr = null;
     private DcMotor br = null;
-    private DcMotorEx intake = null;
+   // private DcMotorEx intake = null;
     private DcMotorEx outtake = null;
 
     @Override
@@ -82,11 +82,11 @@ public class teleop extends LinearOpMode {
 
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
-        fl = hardwareMap.get(DcMotor.class, "fl");
+        //fl = hardwareMap.get(DcMotor.class, "fl");
         bl = hardwareMap.get(DcMotor.class, "bl");
         fr = hardwareMap.get(DcMotor.class, "fr");
         br = hardwareMap.get(DcMotor.class, "br");
-        intake = hardwareMap.get(DcMotorEx.class, "intake");
+        //intake = hardwareMap.get(DcMotorEx.class, "intake");
         outtake = hardwareMap.get(DcMotorEx.class, "outtake");
 
         // ########################################################################################
@@ -99,12 +99,12 @@ public class teleop extends LinearOpMode {
         // when you first test your robot, push the left joystick forward and observe the direction the wheels turn.
         // Reverse the direction (flip FORWARD <-> REVERSE ) of any wheel that runs backward
         // Keep testing until ALL the wheels move the robot forward when you push the left joystick forward.
-        fl.setDirection(DcMotor.Direction.FORWARD);
+       // fl.setDirection(DcMotor.Direction.FORWARD);
         bl.setDirection(DcMotor.Direction.REVERSE);
         fr.setDirection(DcMotor.Direction.REVERSE);
         br.setDirection(DcMotor.Direction.FORWARD);
-        intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+       // intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         outtake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         outtake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -117,6 +117,7 @@ public class teleop extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+           /*
             if (gamepad2.left_trigger > 0.4) {
                 intake.setVelocity(2000); //in ticks
             } else if (gamepad2.left_bumper){
@@ -124,7 +125,7 @@ public class teleop extends LinearOpMode {
             } else {
                 intake.setPower(0);
             }
-
+            */
             if (gamepad2.right_trigger > 0.4) {
                 outtake.setVelocity(3000);
             } if (gamepad2.dpad_down) {
@@ -196,7 +197,7 @@ public class teleop extends LinearOpMode {
             */
 
             // Send calculated power to wheels
-            fl.setPower(frontLeftPower);
+           // fl.setPower(frontLeftPower);
             fr.setPower(frontRightPower);
             bl.setPower(backLeftPower);
             br.setPower(backRightPower);
