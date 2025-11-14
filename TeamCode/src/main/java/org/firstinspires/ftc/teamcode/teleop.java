@@ -137,16 +137,12 @@ public class teleop extends LinearOpMode {
             } else {
                 intake.setPower(0);
             }
-            if (gamepad2.right_trigger > 0.4) {
-                outtake.setVelocity(3000);
+            if (gamepad2.right_bumper) {
+                outtake.setVelocity(1500);
             } if (gamepad2.dpad_down) {
-                outtake.setVelocity(2000);
+                outtake.setVelocity(1700);
             } if (gamepad2.dpad_up) {
                 outtake.setVelocity(2500);
-            } else if (gamepad2.dpad_left) {
-                outtake.setPower(0.8);
-            } else if (gamepad2.dpad_right) {
-                outtake.setPower(1);
             } else {
                 outtake.setVelocity(0);
             }
@@ -217,6 +213,7 @@ public class teleop extends LinearOpMode {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", frontLeftPower, frontRightPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", backLeftPower, backRightPower);
+            telemetry.addData("outtake power", outtake.getVelocity());
             telemetry.update();
         }
     }}
