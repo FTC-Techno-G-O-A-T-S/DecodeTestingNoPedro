@@ -84,8 +84,22 @@ public class teleop extends LinearOpMode {
     private  ServoImplEx br1 = null;
     private ServoImplEx br2 = null;
     private ServoImplEx br3 = null;
-    private double ramppower = null;
+    /*private double ramppower = 0;
 
+    private double Kp = someValue;
+    private  double Ki = someValue;
+    private double Kd = someValue;
+
+    private double reference = someValue;
+
+    private double integralSum = 0;
+
+    private double lastError = 0;
+    private double velocity = 0;
+    private double error = 0;
+    private double derivative = 0;
+    private double out = 0;
+*/
     @Override
     public void runOpMode() {
 
@@ -137,6 +151,47 @@ public class teleop extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
 
         while (opModeIsActive()) {
+        /*
+
+         * Proportional Integral Derivative Controller
+
+         */
+
+
+// Elapsed timer class from SDK, please use it, it's epic
+        /*ElapsedTime timer = new ElapsedTime();
+
+        while (outtake.getVelocity()<= reference) {
+
+
+            // obtain the encoder position
+            velocity = outtake.getVelocity();
+            // calculate the error
+            error = reference - velocity;
+
+            // rate of change of the error
+            derivative = (error - lastError) / timer.seconds();
+
+            // sum of all error over time
+            integralSum = integralSum + (error * timer.seconds());
+
+            out = (Kp * error) + (Ki * integralSum) + (Kd * derivative);
+
+            outtake.setPower(out);
+
+            lastError = error;
+
+            // reset the timer for next time
+            timer.reset();
+
+        }*/
+
+
+
+
+
+
+
             //hood
             if (gamepad2.triangle){
                 hood.setPosition(.85);
