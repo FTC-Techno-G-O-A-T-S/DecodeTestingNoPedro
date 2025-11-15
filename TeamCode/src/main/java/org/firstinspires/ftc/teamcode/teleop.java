@@ -66,10 +66,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
-
+@Configurable
 @TeleOp(name="teleop", group="Linear OpMode")
 //@Disabled
-@Configurable
 public class teleop extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
@@ -161,7 +160,7 @@ public class teleop extends LinearOpMode {
          */
 // Elapsed timer class from SDK, please use it, it's epic
         ElapsedTime timer = new ElapsedTime();
-
+/*
         while (outtake.getVelocity()<= reference) {
             // obtain the encoder position
             velocity = outtake.getVelocity();
@@ -179,7 +178,7 @@ public class teleop extends LinearOpMode {
         }
 
 
-
+*/
 
             //hood
             if (gamepad2.triangle){
