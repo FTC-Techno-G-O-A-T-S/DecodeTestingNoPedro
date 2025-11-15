@@ -144,7 +144,7 @@ public class teleop extends LinearOpMode {
                 hood.setPosition(.915);
             }
             //ramp
-            
+
             //intake
             if (gamepad2.left_trigger > 0.4) {
                 intake.setVelocity(2000); //in ticks
