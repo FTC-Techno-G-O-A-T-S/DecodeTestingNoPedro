@@ -79,6 +79,12 @@ public class teleop extends LinearOpMode {
     private DcMotorEx intake = null;
     private DcMotorEx outtake = null;
     private ServoImplEx hood = null;
+    private ServoImplEx ur1 = null;
+    private ServoImplEx ur2 = null;
+    private  ServoImplEx br1 = null;
+    private ServoImplEx br2 = null;
+    private ServoImplEx br3 = null;
+    private double ramppower = null;
 
     @Override
     public void runOpMode() {
@@ -92,6 +98,12 @@ public class teleop extends LinearOpMode {
         intake = hardwareMap.get(DcMotorEx.class, "intake");
         outtake = hardwareMap.get(DcMotorEx.class, "outtake");
         hood = hardwareMap.get(ServoImplEx.class, "hood");
+        ur1 = hardwareMap.get(ServoImplEx.class, "ur1");
+        ur2 = hardwareMap.get(ServoImplEx.class, "ur2");
+        br1 = hardwareMap.get(ServoImplEx.class, "br1");
+        br2 = hardwareMap.get(ServoImplEx.class, "br2");
+        br3 = hardwareMap.get(ServoImplEx.class,"br3");
+
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -125,11 +137,15 @@ public class teleop extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
 
         while (opModeIsActive()) {
+            //hood
             if (gamepad2.triangle){
                 hood.setPosition(.85);
             } else{
                 hood.setPosition(.915);
             }
+            //ramp
+            
+            //intake
             if (gamepad2.left_trigger > 0.4) {
                 intake.setVelocity(2000); //in ticks
             } else if (gamepad2.left_bumper){
@@ -137,6 +153,7 @@ public class teleop extends LinearOpMode {
             } else {
                 intake.setPower(0);
             }
+            //outtake
             if (gamepad2.right_bumper) {
                 outtake.setVelocity(1500);
             } if (gamepad2.dpad_down) {
