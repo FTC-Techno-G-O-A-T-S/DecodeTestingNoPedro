@@ -34,6 +34,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /*
@@ -76,6 +78,7 @@ public class teleop extends LinearOpMode {
     private DcMotor br = null;
     private DcMotorEx intake = null;
     private DcMotorEx outtake = null;
+    private ServoImplEx hood = null;
 
     @Override
     public void runOpMode() {
@@ -88,6 +91,7 @@ public class teleop extends LinearOpMode {
         br = hardwareMap.get(DcMotor.class, "br");
         intake = hardwareMap.get(DcMotorEx.class, "intake");
         outtake = hardwareMap.get(DcMotorEx.class, "outtake");
+        hood = hardwareMap.get(ServoImplEx.class, "hood");
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -107,6 +111,7 @@ public class teleop extends LinearOpMode {
         intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         outtake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         outtake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hood.setDirection(Servo.Direction.FORWARD);
 
         // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Initialized");
@@ -114,9 +119,17 @@ public class teleop extends LinearOpMode {
 
         waitForStart();
         runtime.reset();
+        hood.setPosition(1);
+
 
         // run until the end of the match (driver presses STOP)
+
         while (opModeIsActive()) {
+            if (gamepad2.triangle){
+                hood.setPosition(.85);
+            } else{
+                hood.setPosition(.915);
+            }
             if (gamepad2.left_trigger > 0.4) {
                 intake.setVelocity(2000); //in ticks
             } else if (gamepad2.left_bumper){
@@ -124,11 +137,10 @@ public class teleop extends LinearOpMode {
             } else {
                 intake.setPower(0);
             }
-
-            if (gamepad2.right_trigger > 0.4) {
-                outtake.setVelocity(3000);
+            if (gamepad2.right_bumper) {
+                outtake.setVelocity(1500);
             } if (gamepad2.dpad_down) {
-                outtake.setVelocity(2000);
+                outtake.setVelocity(1700);
             } if (gamepad2.dpad_up) {
                 outtake.setVelocity(2500);
             } else {
@@ -201,6 +213,7 @@ public class teleop extends LinearOpMode {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", frontLeftPower, frontRightPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", backLeftPower, backRightPower);
+            telemetry.addData("outtake power", outtake.getVelocity());
             telemetry.update();
         }
     }}
