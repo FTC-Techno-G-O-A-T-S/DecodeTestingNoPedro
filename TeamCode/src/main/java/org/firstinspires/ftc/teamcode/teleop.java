@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -68,6 +69,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="teleop", group="Linear OpMode")
 //@Disabled
+@Configurable
 public class teleop extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
@@ -84,22 +86,22 @@ public class teleop extends LinearOpMode {
     private  ServoImplEx br1 = null;
     private ServoImplEx br2 = null;
     private ServoImplEx br3 = null;
-    /*private double ramppower = 0;
+    private double ramppower = 0;
 
-    private double Kp = someValue;
-    private  double Ki = someValue;
-    private double Kd = someValue;
+    public static double Kp = 0;
+    public static double Ki = 0;
+    public static double Kd = 0;
 
-    private double reference = someValue;
+    public static double reference = 0;
 
-    private double integralSum = 0;
+    public static double integralSum = 0;
 
-    private double lastError = 0;
-    private double velocity = 0;
-    private double error = 0;
-    private double derivative = 0;
-    private double out = 0;
-*/
+    public static double lastError = 0;
+    public static double velocity = 0;
+    public static double error = 0;
+    public static double derivative = 0;
+    public static double out = 0;
+
     @Override
     public void runOpMode() {
 
@@ -137,7 +139,7 @@ public class teleop extends LinearOpMode {
         intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         outtake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         outtake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        hood.setDirection(Servo.Direction.FORWARD);
+        //hood.setDirection(Servo.Direction.FORWARD);
 
         // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Initialized");
@@ -145,49 +147,36 @@ public class teleop extends LinearOpMode {
 
         waitForStart();
         runtime.reset();
-        hood.setPosition(1);
+        //hood.setPosition(1);
 
 
         // run until the end of the match (driver presses STOP)
 
         while (opModeIsActive()) {
-        /*
-
+        if (gamepad2.dpad_right){
+            reference = 1500;
+        }
+            /*
          * Proportional Integral Derivative Controller
-
          */
-
-
 // Elapsed timer class from SDK, please use it, it's epic
-        /*ElapsedTime timer = new ElapsedTime();
+        ElapsedTime timer = new ElapsedTime();
 
         while (outtake.getVelocity()<= reference) {
-
-
             // obtain the encoder position
             velocity = outtake.getVelocity();
             // calculate the error
             error = reference - velocity;
-
             // rate of change of the error
             derivative = (error - lastError) / timer.seconds();
-
             // sum of all error over time
             integralSum = integralSum + (error * timer.seconds());
-
             out = (Kp * error) + (Ki * integralSum) + (Kd * derivative);
-
             outtake.setPower(out);
-
             lastError = error;
-
             // reset the timer for next time
             timer.reset();
-
-        }*/
-
-
-
+        }
 
 
 
