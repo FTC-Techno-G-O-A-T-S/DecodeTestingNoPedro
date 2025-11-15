@@ -85,7 +85,6 @@ public class teleop extends LinearOpMode {
     private  ServoImplEx br1 = null;
     private ServoImplEx br2 = null;
     private ServoImplEx br3 = null;
-    private double ramppower = 0;
 
     public static double Kp = 0;
     public static double Ki = 0;
@@ -160,7 +159,6 @@ public class teleop extends LinearOpMode {
          */
 // Elapsed timer class from SDK, please use it, it's epic
         ElapsedTime timer = new ElapsedTime();
-/*
         while (outtake.getVelocity()<= reference) {
             // obtain the encoder position
             velocity = outtake.getVelocity();
@@ -177,8 +175,6 @@ public class teleop extends LinearOpMode {
             timer.reset();
         }
 
-
-*/
 
             //hood
             if (gamepad2.triangle){
@@ -206,15 +202,6 @@ public class teleop extends LinearOpMode {
             } else {
                 outtake.setVelocity(0);
             }
-
-
-
-
-
-
-
-
-
 
 
 
