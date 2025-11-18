@@ -151,12 +151,30 @@ public class autoBlue extends LinearOpMode {
         runtime.reset();
         //hood.setPosition(1);
 
-        while (encoderTicksToInches(bl.getCurrentPosition()) < 34 && opModeIsActive()) {
+        while (encoderTicksToInches(bl.getCurrentPosition()) < 20 && opModeIsActive()) {
             //robot goes forward 2 tile while turning a little to the right
-            fl.setPower(.5);
+            /*fl.setPower(.5);
             fr.setPower(.15);
             bl.setPower(.5);
-            br.setPower(.15);
+            br.setPower(.15);*/
+            fl.setPower(.25);
+            fr.setPower(.25);
+            bl.setPower(.25);
+            br.setPower(.25);
+        }
+        outtake.setPower(1);
+        br1.setPosition(.1);
+        br2.setPosition(.1);
+        ur1.setPosition(1);
+        ur2.setPosition(1);
+        br3.setPosition(.1);
+
+        while (encoderTicksToInches(bl.getCurrentPosition()) < 12 && opModeIsActive()) {
+            //robot strafes to the right hopefully about a foot to exit and gain points
+            fl.setPower(-.25);
+            fr.setPower(.25);
+            bl.setPower(.25);
+            br.setPower(-.25);
         }
 
 
@@ -164,7 +182,11 @@ public class autoBlue extends LinearOpMode {
 
 
 
-        // run until the end of the match (driver presses STOP)
+
+
+
+
+            // run until the end of the match (driver presses STOP)
 
 
             //DRIVE CODE
@@ -177,22 +199,22 @@ public class autoBlue extends LinearOpMode {
 
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry.
-            double frontLeftPower  = axial + lateral + yaw;
-            double frontRightPower = axial - lateral - yaw;
-            double backLeftPower   = axial - lateral + yaw;
-            double backRightPower  = axial + lateral - yaw;
+            double flPower  = axial + lateral + yaw;
+            double frPower = axial - lateral - yaw;
+            double blPower   = axial - lateral + yaw;
+            double brPower  = axial + lateral - yaw;
 
             // Normalize the values so no wheel power exceeds 100%
             // This ensures that the robot maintains the desired motion.
-            max = Math.max(Math.abs(frontLeftPower), Math.abs(frontRightPower));
-            max = Math.max(max, Math.abs(backLeftPower));
-            max = Math.max(max, Math.abs(backRightPower));
+        max = Math.max(Math.abs(flPower), Math.abs(frPower));
+        max = Math.max(max, Math.abs(blPower));
+        max = Math.max(max, Math.abs(brPower));
 
             if (max > 1.0) {
-                frontLeftPower  /= max;
-                frontRightPower /= max;
-                backLeftPower   /= max;
-                backRightPower  /= max;
+                flPower  /= max;
+                frPower /= max;
+                blPower   /= max;
+                brPower  /= max;
             }
 
             // This is test code:
@@ -213,16 +235,19 @@ public class autoBlue extends LinearOpMode {
             */
 
             // Send calculated power to wheels
-            fl.setPower(frontLeftPower);
-            fr.setPower(frontRightPower);
-            bl.setPower(backLeftPower);
-            br.setPower(backRightPower);
+            fl.setPower(flPower);
+            fr.setPower(frPower);
+            bl.setPower(blPower);
+            br.setPower(brPower);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Front left/Right", "%4.2f, %4.2f", frontLeftPower, frontRightPower);
-            telemetry.addData("Back  left/Right", "%4.2f, %4.2f", backLeftPower, backRightPower);
-            telemetry.addData("outtake power", outtake.getVelocity());
+            telemetry.addData("Front left/Right", "%4.2f, %4.2f", flPower, frPower);
+            telemetry.addData("Back  left/Right", "%4.2f, %4.2f", blPower, brPower);
+            telemetry.addData("outtake velocity", outtake.getVelocity());
+            telemetry.addData("bl data", bl.getCurrentPosition());
+            telemetry.addData("br data", br.getCurrentPosition());
+            telemetry.addData("fl data", fl.getCurrentPosition());
             telemetry.update();
         }
     }
