@@ -83,6 +83,7 @@ public class teleop extends LinearOpMode {
     private  ServoImplEx br1 = null;
     private ServoImplEx br2 = null;
     private ServoImplEx br3 = null;
+    private double speed = 0;
 
 
     @Override
@@ -165,10 +166,11 @@ public class teleop extends LinearOpMode {
                 br2.setPosition(0.5);
                 //br3.setPosition(0.5);
             }
+            //kicker
             if(gamepad2.a){
                 br3.setPosition(0.1);
             } else{
-                br3.setPosition(0.5);
+                br3.setPosition(0.3);
             }
             //intake
             if (gamepad2.left_trigger > 0.4) {
@@ -180,11 +182,11 @@ public class teleop extends LinearOpMode {
             }
             //outtake
             if (gamepad2.right_bumper) {
-                outtake.setVelocity(1500);
-            } if (gamepad2.dpad_down) {
-                outtake.setVelocity(1700);
-            } if (gamepad2.dpad_up) {
+                outtake.setPower(0.7);
+            } if (gamepad2.right_trigger > 0.4) {
                 outtake.setVelocity(2500);
+            } if (gamepad2.dpad_up) {
+                outtake.setPower(2500);
             } else {
                 outtake.setVelocity(0);
             }
@@ -264,7 +266,8 @@ public class teleop extends LinearOpMode {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", frontLeftPower, frontRightPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", backLeftPower, backRightPower);
-            telemetry.addData("outtake power", outtake.getVelocity());
+            telemetry.addData("outtake velocity", outtake.getVelocity());
+            telemetry.addData("outtake power", outtake.getPower());
             telemetry.update();
         }
     }}
