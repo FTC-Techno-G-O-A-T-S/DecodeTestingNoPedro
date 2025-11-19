@@ -168,9 +168,9 @@ public class teleop extends LinearOpMode {
             }
             //kicker
             if(gamepad2.a){
-                br3.setPosition(0.1);
+                br3.setPosition(0.6);
             } else{
-                br3.setPosition(0.3);
+                br3.setPosition(0.9);
             }
             //intake
             if (gamepad2.left_trigger > 0.4) {
