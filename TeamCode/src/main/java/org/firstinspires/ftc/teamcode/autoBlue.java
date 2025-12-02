@@ -188,7 +188,7 @@ public class autoBlue extends LinearOpMode {
 
             // run until the end of the match (driver presses STOP)
 
-
+/*
             //DRIVE CODE
             double max;
 
@@ -233,17 +233,17 @@ public class autoBlue extends LinearOpMode {
             frontRightPower = gamepad1.y ? 1.0 : 0.0;  // Y gamepad
             backRightPower  = gamepad1.b ? 1.0 : 0.0;  // B gamepad
             */
-
+/*
             // Send calculated power to wheels
             fl.setPower(flPower);
             fr.setPower(frPower);
             bl.setPower(blPower);
             br.setPower(brPower);
-
+*/
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Front left/Right", "%4.2f, %4.2f", flPower, frPower);
-            telemetry.addData("Back  left/Right", "%4.2f, %4.2f", blPower, brPower);
+            //telemetry.addData("Front left/Right", "%4.2f, %4.2f", flPower, frPower);
+            //telemetry.addData("Back  left/Right", "%4.2f, %4.2f", blPower, brPower);
             telemetry.addData("outtake velocity", outtake.getVelocity());
             telemetry.addData("bl data", bl.getCurrentPosition());
             telemetry.addData("br data", br.getCurrentPosition());

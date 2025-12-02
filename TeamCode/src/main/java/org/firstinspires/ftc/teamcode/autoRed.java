@@ -64,7 +64,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
-@Autonomous
+@Autonomous (preselectTeleOp="teleop")
 public class autoRed extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
@@ -187,7 +187,7 @@ public class autoRed extends LinearOpMode {
 
 
             // run until the end of the match (driver presses STOP)
-
+/*
 
             //DRIVE CODE
             double max;
@@ -233,17 +233,17 @@ public class autoRed extends LinearOpMode {
             frontRightPower = gamepad1.y ? 1.0 : 0.0;  // Y gamepad
             backRightPower  = gamepad1.b ? 1.0 : 0.0;  // B gamepad
             */
-
+/*
             // Send calculated power to wheels
             fl.setPower(flPower);
             fr.setPower(frPower);
             bl.setPower(blPower);
             br.setPower(brPower);
-
+*/
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Front left/Right", "%4.2f, %4.2f", flPower, frPower);
-            telemetry.addData("Back  left/Right", "%4.2f, %4.2f", blPower, brPower);
+            //telemetry.addData("Front left/Right", "%4.2f, %4.2f", flPower, frPower);
+            //telemetry.addData("Back  left/Right", "%4.2f, %4.2f", blPower, brPower);
             telemetry.addData("outtake power", outtake.getVelocity());
             telemetry.update();
         }
