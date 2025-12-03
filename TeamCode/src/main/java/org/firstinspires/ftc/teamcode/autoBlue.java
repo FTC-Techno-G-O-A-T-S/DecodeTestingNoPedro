@@ -4,9 +4,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 /* Copyright (c) 2021 FIRST. All rights reserved.
  *
@@ -81,7 +84,7 @@ public class autoBlue extends LinearOpMode {
     private  ServoImplEx br1 = null;
     private ServoImplEx br2 = null;
     private ServoImplEx br3 = null;
-
+    IMU imu;
     int three = 2;
     double lastbl;
     double lastfl;
@@ -161,6 +164,9 @@ public class autoBlue extends LinearOpMode {
             fr.setPower(.25);
             bl.setPower(.25);
             br.setPower(.25);
+            telemetry.addData("Yaw (Z)", "%.2f Deg. (Heading)", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+            telemetry.addData("encoder ticks (BL)", encoderTicksToInches(br.getCurrentPosition()));
+            telemetry.update();
         }
         outtake.setPower(1);
         br1.setPosition(.1);
@@ -175,6 +181,9 @@ public class autoBlue extends LinearOpMode {
             fr.setPower(.25);
             bl.setPower(.25);
             br.setPower(-.25);
+            telemetry.addData("Yaw (Z)", "%.2f Deg. (Heading)", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+            telemetry.addData("encoder ticks (BL)", encoderTicksToInches(br.getCurrentPosition()));
+            telemetry.update();
         }
 
 

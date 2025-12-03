@@ -40,7 +40,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.teamcode.controllers.PIDFController;
+//import org.firstinspires.ftc.teamcode.controllers.PIDFController;
 
 /*
  * This file contains an example of a Linear "OpMode".
@@ -88,7 +88,7 @@ public class teleop extends LinearOpMode {
     private  ServoImplEx br1 = null;
     private ServoImplEx br2 = null;
     private ServoImplEx br3 = null;
-    private PIDFController outtakePIDF = new PIDFController(0, 0, 0, 0);
+    private org.firstinspires.ftc.teamcode.PIDFController PIDFController;
 
 
     @Override
@@ -185,13 +185,14 @@ public class teleop extends LinearOpMode {
             } else {
                 intake.setPower(0);
             }
+
             //outtake
             if (gamepad2.right_bumper) {
                 outtake.setPower(0.7);
             } if (gamepad2.right_trigger > 0.4) {
                 outtake.setVelocity(2500);
             } if (gamepad2.dpad_up) {
-                outtake.setPower(2500);
+                outtake.setPower(1);
             } else {
                 outtake.setVelocity(0);
             }
