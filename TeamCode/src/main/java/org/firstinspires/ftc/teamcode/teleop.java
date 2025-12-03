@@ -89,27 +89,9 @@ public class teleop extends LinearOpMode {
     private ServoImplEx br3 = null;
     private double speed = 0;
 
-    public static double Kp = 0;
-    public static double Ki = 0;
-    public static double Kd = 0;
-
-    public static double reference = 0;
-
-    public static double integralSum = 0;
-
-    public static double lastError = 0;
-    public static double velocity = 0;
-    public static double error = 0;
-    public static double derivative = 0;
-    public static double out = 0;
-    //public static PIDCoefficients TURNING_PID = new PIDCoefficients();
-    public static double motor = 0;
-
 
     @Override
     public void runOpMode() {
-        //telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
         fl = hardwareMap.get(DcMotor.class, "fl");
@@ -161,31 +143,6 @@ public class teleop extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
 
         while (opModeIsActive()) {
-            /*if (gamepad2.dpad_right){
-                reference = 1500;
-            }*/
-            /*
-             * Proportional Integral Derivative Controller
-             *//*
-// Elapsed timer class from SDK, please use it, it's epic
-            ElapsedTime timer = new ElapsedTime();
-            while (outtake.getVelocity()<= reference) {
-                // obtain the encoder position
-                velocity = outtake.getVelocity();
-                // calculate the error
-                error = reference - velocity;
-                // rate of change of the error
-                derivative = (error - lastError) / timer.seconds();
-                // sum of all error over time
-                integralSum = integralSum + (error * timer.seconds());
-                out = (Kp * error) + (Ki * integralSum) + (Kd * derivative);
-                outtake.setPower(out);
-                lastError = error;
-                // reset the timer for next time
-                timer.reset();
-            }
-*/
-
 
             //hood
             if (gamepad2.triangle){
