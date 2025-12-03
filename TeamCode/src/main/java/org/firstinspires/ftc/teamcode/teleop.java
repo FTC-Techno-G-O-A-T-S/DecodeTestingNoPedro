@@ -40,6 +40,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import org.firstinspires.ftc.teamcode.controllers.PIDFController;
 
 /*
  * This file contains an example of a Linear "OpMode".
@@ -68,7 +69,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
-//@Config
+@Config
 @TeleOp(name="teleop", group="Linear OpMode")
 //@Disabled
 public class teleop extends LinearOpMode {
@@ -87,7 +88,7 @@ public class teleop extends LinearOpMode {
     private  ServoImplEx br1 = null;
     private ServoImplEx br2 = null;
     private ServoImplEx br3 = null;
-    private double speed = 0;
+    private PIDFController outtakePIDF = new PIDFController(0, 0, 0, 0);
 
 
     @Override
