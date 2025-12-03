@@ -68,7 +68,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
-@Config
+//@Config
 @TeleOp(name="teleop", group="Linear OpMode")
 //@Disabled
 public class teleop extends LinearOpMode {
@@ -108,7 +108,7 @@ public class teleop extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        //telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
@@ -166,7 +166,7 @@ public class teleop extends LinearOpMode {
             }*/
             /*
              * Proportional Integral Derivative Controller
-             */
+             *//*
 // Elapsed timer class from SDK, please use it, it's epic
             ElapsedTime timer = new ElapsedTime();
             while (outtake.getVelocity()<= reference) {
@@ -184,7 +184,7 @@ public class teleop extends LinearOpMode {
                 // reset the timer for next time
                 timer.reset();
             }
-
+*/
 
 
             //hood
