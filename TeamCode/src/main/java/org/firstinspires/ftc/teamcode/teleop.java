@@ -100,7 +100,8 @@ public class teleop extends LinearOpMode {
     public static double error = 0;
     public static double derivative = 0;
     public static double out = 0;
-    public static PIDCoefficients TURNING_PID = new PIDCoefficients();
+    //public static PIDCoefficients TURNING_PID = new PIDCoefficients();
+    public static double motor = 0;
 
     @Override
     public void runOpMode() {
@@ -176,7 +177,7 @@ public class teleop extends LinearOpMode {
             // reset the timer for next time
             timer.reset();
         }
-
+        outtake.setVelocity(motor);8
 
             //hood
             if (gamepad2.triangle){
