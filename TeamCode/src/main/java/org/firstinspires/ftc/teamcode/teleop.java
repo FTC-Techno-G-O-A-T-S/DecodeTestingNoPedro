@@ -40,7 +40,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
-//import org.firstinspires.ftc.teamcode.controllers.PIDFController;
+import com.seattlesolvers.solverslib.controller.PController;
 
 /*
  * This file contains an example of a Linear "OpMode".
@@ -88,7 +88,15 @@ public class teleop extends LinearOpMode {
     private  ServoImplEx br1 = null;
     private ServoImplEx br2 = null;
     private ServoImplEx br3 = null;
-    private org.firstinspires.ftc.teamcode.PIDFController PIDFController;
+    //private org.firstinspires.ftc.teamcode.PIDFController PIDFController;
+    public static double kP = 0;
+    public static double kI = 0;
+    public static double kD = 0;
+    public static double kF = 0;
+    PIDFController pidf = new PIDFController();
+    public static double output = 0;
+
+
 
 
     @Override
@@ -197,7 +205,38 @@ public class teleop extends LinearOpMode {
                 outtake.setVelocity(0);
             }
 
+            // Calculates the output of the PIDF algorithm based on sensor
+            // readings. Requires both the measured value
+            // and the desired setpoint
+            output = pidf.calculate(
+                outtake.getCurrentPosition(), setpoint
+            );
 
+            /*
+             * A sample control loop for a motor
+             */
+            PController pController = new PController(kP);
+
+        // We set the setpoint here.
+        // Now we don't have to declare the setpoint
+        // in our calculate() method arguments.
+            pController.setSetPoint(1200);
+
+        // perform the control loop
+            /*
+             * The loop checks to see if the controller has reached
+             * the desired setpoint within a specified tolerance
+             * range
+             */
+            while (!pController.atSetPoint()) {
+                output = pController.calculate(
+                        outtake.getVelocity()  // the measured value
+                );
+                outtake.setVelocity(output);
+            }
+            outtake.setVelocity(0); // stop the motor
+
+        // NOTE: motors have internal PID control
 
 
 
