@@ -42,6 +42,8 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.controller.PController;
 
+
+
 /*
  * This file contains an example of a Linear "OpMode".
  * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
@@ -95,6 +97,8 @@ public class teleop extends LinearOpMode {
     public static double kF = 0;
     PIDFController pidf = new PIDFController();
     public static double output = 0;
+    public static double velocity = 0;
+    public static double setpoint = 0;
 
 
 
@@ -208,9 +212,9 @@ public class teleop extends LinearOpMode {
             // Calculates the output of the PIDF algorithm based on sensor
             // readings. Requires both the measured value
             // and the desired setpoint
-            output = pidf.calculate(
-                outtake.getCurrentPosition(), setpoint
-            );
+            /*output = pidf.calculate(
+                //outtake.getCurrentPosition(), setpoint
+            );*/
 
             /*
              * A sample control loop for a motor
@@ -220,7 +224,7 @@ public class teleop extends LinearOpMode {
         // We set the setpoint here.
         // Now we don't have to declare the setpoint
         // in our calculate() method arguments.
-            pController.setSetPoint(1200);
+            pController.setSetPoint(velocity);
 
         // perform the control loop
             /*

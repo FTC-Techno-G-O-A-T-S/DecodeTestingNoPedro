@@ -164,9 +164,7 @@ public class autoBlue extends LinearOpMode {
             fr.setPower(.25);
             bl.setPower(.25);
             br.setPower(.25);
-            telemetry.addData("Yaw (Z)", "%.2f Deg. (Heading)", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
-            telemetry.addData("encoder ticks (BL)", encoderTicksToInches(br.getCurrentPosition()));
-            telemetry.update();
+
         }
         outtake.setPower(1);
         br1.setPosition(.1);
@@ -181,6 +179,8 @@ public class autoBlue extends LinearOpMode {
             fr.setPower(.25);
             bl.setPower(.25);
             br.setPower(-.25);
+            telemetry.addData("Yaw (Z)", "%.2f Deg. (Heading)", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+            telemetry.addData("encoder ticks (BL)", encoderTicksToInches(br.getCurrentPosition()));
             telemetry.addData("Yaw (Z)", "%.2f Deg. (Heading)", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
             telemetry.addData("encoder ticks (BL)", encoderTicksToInches(br.getCurrentPosition()));
             telemetry.update();
