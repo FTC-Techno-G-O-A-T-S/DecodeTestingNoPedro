@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -65,6 +66,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
+@Config
 @TeleOp(name="teleop", group="Linear OpMode")
 //@Disabled
 public class teleop extends LinearOpMode {
@@ -84,6 +86,22 @@ public class teleop extends LinearOpMode {
     private ServoImplEx br2 = null;
     private ServoImplEx br3 = null;
     private double speed = 0;
+
+    public static double Kp = 0;
+    public static double Ki = 0;
+    public static double Kd = 0;
+
+    public static double reference = 0;
+
+    public static double integralSum = 0;
+
+    public static double lastError = 0;
+    public static double velocity = 0;
+    public static double error = 0;
+    public static double derivative = 0;
+    public static double out = 0;
+    //public static PIDCoefficients TURNING_PID = new PIDCoefficients();
+    public static double motor = 0;
 
 
     @Override
@@ -140,6 +158,33 @@ public class teleop extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
 
         while (opModeIsActive()) {
+            /*if (gamepad2.dpad_right){
+                reference = 1500;
+            }*/
+            /*
+             * Proportional Integral Derivative Controller
+             */
+// Elapsed timer class from SDK, please use it, it's epic
+            ElapsedTime timer = new ElapsedTime();
+            while (outtake.getVelocity()<= reference) {
+                // obtain the encoder position
+                velocity = outtake.getVelocity();
+                // calculate the error
+                error = reference - velocity;
+                // rate of change of the error
+                derivative = (error - lastError) / timer.seconds();
+                // sum of all error over time
+                integralSum = integralSum + (error * timer.seconds());
+                out = (Kp * error) + (Ki * integralSum) + (Kd * derivative);
+                outtake.setPower(out);
+                lastError = error;
+                // reset the timer for next time
+                timer.reset();
+            }
+            outtake.setVelocity(motor);
+
+
+
             //hood
             if (gamepad2.triangle){
                 hood.setPosition(.85);
