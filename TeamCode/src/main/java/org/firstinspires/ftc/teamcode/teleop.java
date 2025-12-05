@@ -185,9 +185,9 @@ public class teleop extends LinearOpMode {
             }
             //kicker
             if(gamepad2.a){
-                br3.setPosition(0.6);
+                br3.setPosition(0.4);
             } else{
-                br3.setPosition(0.9);
+                br3.setPosition(0.75);
             }
             //intake
             if (gamepad2.left_trigger > 0.4) {
@@ -199,8 +199,8 @@ public class teleop extends LinearOpMode {
             }
 
             //outtake
-            if (gamepad2.right_bumper) {
-                outtake.setPower(0.7);
+            if (gamepad2.dpad_right) {
+                outtake.setPower(0.86);
             } if (gamepad2.right_trigger > 0.4) {
                 outtake.setVelocity(2500);
             } if (gamepad2.dpad_up) {
@@ -219,19 +219,19 @@ public class teleop extends LinearOpMode {
             /*
              * A sample control loop for a motor
              */
-            PController pController = new PController(kP);
+            //PController pController = new PController(kP);
 
         // We set the setpoint here.
         // Now we don't have to declare the setpoint
         // in our calculate() method arguments.
-            pController.setSetPoint(velocity);
+           // pController.setSetPoint(velocity);
 
         // perform the control loop
             /*
              * The loop checks to see if the controller has reached
              * the desired setpoint within a specified tolerance
              * range
-             */
+             *//*
             while (!pController.atSetPoint()) {
                 output = pController.calculate(
                         outtake.getVelocity()  // the measured value
@@ -242,7 +242,7 @@ public class teleop extends LinearOpMode {
 
         // NOTE: motors have internal PID control
 
-
+*/
 
 
 
