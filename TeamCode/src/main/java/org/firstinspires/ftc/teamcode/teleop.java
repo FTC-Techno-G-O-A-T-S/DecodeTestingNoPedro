@@ -159,7 +159,7 @@ public class teleop extends LinearOpMode {
 
             //hood
             if (gamepad2.triangle){
-                hood.setPosition(.85);
+                hood.setPosition(0.75);
             } else{
                 hood.setPosition(.915);
             }
