@@ -4,12 +4,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.IMU;
+//import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+//import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 /* Copyright (c) 2021 FIRST. All rights reserved.
  *
@@ -84,11 +84,11 @@ public class autoBlue extends LinearOpMode {
     private  ServoImplEx br1 = null;
     private ServoImplEx br2 = null;
     private ServoImplEx br3 = null;
-    IMU imu;
-    int three = 2;
-    double lastbl;
-    double lastfl;
-    double lastbr;
+    //IMU imu;
+    //int three = 2;
+    //double lastbl;
+    //double lastfl;
+    //double lastbr;
     public static double TICKS_PER_REV = 2000;
     public static double WHEEL_RADIUS = 0.6299212598; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
@@ -154,36 +154,76 @@ public class autoBlue extends LinearOpMode {
         runtime.reset();
         //hood.setPosition(1);
 
-        while (encoderTicksToInches(bl.getCurrentPosition()) < 20 && opModeIsActive()) {
-            //robot goes forward 2 tile while turning a little to the right
-            /*fl.setPower(.5);
-            fr.setPower(.15);
-            bl.setPower(.5);
-            br.setPower(.15);*/
-            fl.setPower(.25);
-            fr.setPower(.25);
-            bl.setPower(.25);
-            br.setPower(.25);
 
-        }
-        outtake.setPower(1);
-        br1.setPosition(.1);
-        br2.setPosition(.1);
-        ur1.setPosition(1);
-        ur2.setPosition(1);
-        br3.setPosition(.1);
-
-        while (encoderTicksToInches(bl.getCurrentPosition()) < 12 && opModeIsActive()) {
-            //robot strafes to the right hopefully about a foot to exit and gain points
+        telemetry.addData("Status", "Run Time: " + runtime.toString());
+        //telemetry.addData("Front left/Right", "%4.2f, %4.2f", flPower, frPower);
+        //telemetry.addData("Back  left/Right", "%4.2f, %4.2f", blPower, brPower);
+        telemetry.addData("outtake power", outtake.getVelocity());
+        telemetry.update();
+        while (opModeIsActive() && runtime.seconds() < 3) {
             fl.setPower(-.25);
             fr.setPower(.25);
             bl.setPower(.25);
             br.setPower(-.25);
-            telemetry.addData("Yaw (Z)", "%.2f Deg. (Heading)", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
-            telemetry.addData("encoder ticks (BL)", encoderTicksToInches(br.getCurrentPosition()));
-            telemetry.addData("Yaw (Z)", "%.2f Deg. (Heading)", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
-            telemetry.addData("encoder ticks (BL)", encoderTicksToInches(br.getCurrentPosition()));
-            telemetry.update();
+        }
+        while (opModeIsActive() && runtime.seconds() < 6) {
+            fl.setPower(-.25);
+            fr.setPower(-.25);
+            bl.setPower(-.25);
+            br.setPower(-.25);
+        }
+        /*while (opModeIsActive() && runtime.seconds() < 10) {
+            if (opModeIsActive()) {
+                ElapsedTime timer = new ElapsedTime();
+
+                // Start motorA immediately
+                outtake.setPower(1);
+
+                // Loop while op mode is active
+                while (opModeIsActive()) {
+                    double elapsed = timer.seconds();
+
+                    // After 5 seconds, start motorB
+                    if (elapsed >= 5.0 && br1.getPosition() != 1) {
+                        br1.setPosition(1);
+                        br1.setPosition(1);
+                        br2.setPosition(1);
+                        ur1.setPosition(.1);
+                        ur2.setPosition(.1);
+                    }
+
+                    // After 1.5 seconds, stop motorB
+                    if (elapsed >= 1.5 && br1.getPosition() != 0.5) {
+                        br1.setPosition(.5);
+                        br1.setPosition(.5);
+                        br2.setPosition(.5);
+                        ur1.setPosition(.5);
+                        ur2.setPosition(.5);
+                    }
+                    // After 5 seconds, start motorB
+                    if (elapsed >= 2 && br1.getPosition() != .35) {
+                        br3.setPosition(0.35);
+                    }
+
+                    // After 1.5 seconds, stop motorB
+                    if (elapsed >= 5 && br1.getPosition() != 0.75) {
+                        br3.setPosition(0.75);
+
+                    }
+
+                    // After 20 seconds, stop motorA
+                    if (elapsed >= 20.0 && outtake.getPower() != 0) {
+                        outtake.setPower(0);
+                    }
+                }
+            }
+        }*/
+            br1.setPosition(.1);
+            br2.setPosition(.1);
+            ur1.setPosition(1);
+            ur2.setPosition(1);
+            br3.setPosition(.1);
+            runtime.reset();
         }
 
 
@@ -250,14 +290,7 @@ public class autoBlue extends LinearOpMode {
             br.setPower(brPower);
 */
             // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            //telemetry.addData("Front left/Right", "%4.2f, %4.2f", flPower, frPower);
-            //telemetry.addData("Back  left/Right", "%4.2f, %4.2f", blPower, brPower);
-            telemetry.addData("outtake velocity", outtake.getVelocity());
-            telemetry.addData("bl data", bl.getCurrentPosition());
-            telemetry.addData("br data", br.getCurrentPosition());
-            telemetry.addData("fl data", fl.getCurrentPosition());
-            telemetry.update();
+
         }
-    }
+
 

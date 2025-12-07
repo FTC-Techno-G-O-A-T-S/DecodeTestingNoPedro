@@ -33,7 +33,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
@@ -52,13 +56,24 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
  *
  */
 @TeleOp(name = "Robot: Field Relative Mecanum Drive", group = "Robot")
-@Disabled
+//@Disabled
 public class TeleopFieldCentric extends OpMode {
+    private ElapsedTime runtime = new ElapsedTime();
+
+    private DcMotorEx intake = null;
+    private DcMotorEx outtake = null;
+    private ServoImplEx hood = null;
+    private ServoImplEx ur1 = null;
+    private ServoImplEx ur2 = null;
+    private  ServoImplEx br1 = null;
+    private ServoImplEx br2 = null;
+    private ServoImplEx br3 = null;
     // This declares the four motors needed
     DcMotor fl;
     DcMotor fr;
     DcMotor bl;
     DcMotor br;
+
 
     // This declares the IMU needed to get the current direction the robot is facing
     IMU imu;
@@ -69,23 +84,101 @@ public class TeleopFieldCentric extends OpMode {
         fr = hardwareMap.get(DcMotor.class, "fr");
         bl = hardwareMap.get(DcMotor.class, "bl");
         br = hardwareMap.get(DcMotor.class, "br");
+        intake = hardwareMap.get(DcMotorEx.class, "intake");
+        outtake = hardwareMap.get(DcMotorEx.class, "outtake");
+        hood = hardwareMap.get(ServoImplEx.class, "hood");
+        ur1 = hardwareMap.get(ServoImplEx.class, "ur1");
+        ur2 = hardwareMap.get(ServoImplEx.class, "ur2");
+        br1 = hardwareMap.get(ServoImplEx.class, "br1");
+        br2 = hardwareMap.get(ServoImplEx.class, "br2");
+        br3 = hardwareMap.get(ServoImplEx.class,"br3");
 
         // We set the left motors in reverse which is needed for drive trains where the left
         // motors are opposite to the right ones.
         bl.setDirection(DcMotor.Direction.REVERSE);
-        fl.setDirection(DcMotor.Direction.REVERSE);
+        fr.setDirection(DcMotor.Direction.REVERSE);
+        intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        outtake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        outtake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hood.setDirection(Servo.Direction.FORWARD);
+        ur1.setDirection(Servo.Direction.REVERSE);
+        ur2.setDirection(Servo.Direction.REVERSE);
 
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+
+        waitForStart();
+        runtime.reset();
+        while (opModeIsActive()) {
+            if (gamepad2.triangle) {
+                hood.setPosition(0.75);
+            } else {
+                hood.setPosition(.915);
+            }
+            //ramp
+            if (gamepad2.square) {
+                ur1.setPosition(0.1);
+                ur2.setPosition(0.1);
+                br1.setPosition(0.1);
+                br2.setPosition(0.1);
+                //br3.setPosition(0.1);
+            } else if (gamepad2.circle) {
+                ur1.setPosition(1.0);
+                ur2.setPosition(1.0);
+                br1.setPosition(1.0);
+                br2.setPosition(1.0);
+                //br3.setPosition(1.0);
+            } else {
+                ur1.setPosition(0.5);
+                ur2.setPosition(0.5);
+                br1.setPosition(0.5);
+                br2.setPosition(0.5);
+                //br3.setPosition(0.5);
+            }
+            //kicker
+            if (gamepad2.a) {
+                br3.setPosition(0.35);
+                //ur1.setPosition(0.1);
+                //ur2.setPosition(0.1);
+            } else {
+                br3.setPosition(0.75);
+                //ur1.setPosition(0.5);
+                //ur2.setPosition(0.5);
+            }
+            //intake
+            if (gamepad2.left_trigger > 0.4) {
+                intake.setVelocity(2000); //in ticks
+            } else if (gamepad2.left_bumper) {
+                intake.setVelocity(-2000);
+            } else {
+                intake.setPower(0);
+            }
+
+            //outtake
+            if (gamepad2.dpad_right) {
+                outtake.setPower(0.86);
+            }
+            if (gamepad2.right_trigger > 0.4) {
+                outtake.setVelocity(2500);
+            }
+            if (gamepad2.dpad_up) {
+                outtake.setPower(1);
+            } else {
+                outtake.setVelocity(0);
+            }
+        }
         // This uses RUN_USING_ENCODER to be more accurate.   If you don't have the encoder
         // wires, you should remove these
-        fl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        fr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        bl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //fl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //fr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //bl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         imu = hardwareMap.get(IMU.class, "imu");
         // This needs to be changed to match the orientation on your robot
         RevHubOrientationOnRobot.LogoFacingDirection logoDirection =
-                RevHubOrientationOnRobot.LogoFacingDirection.RIGHT;
+                RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
         RevHubOrientationOnRobot.UsbFacingDirection usbDirection =
                 RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD;
 
@@ -94,21 +187,22 @@ public class TeleopFieldCentric extends OpMode {
         imu.initialize(new IMU.Parameters(orientationOnRobot));
     }
 
+    private boolean opModeIsActive() {
+        return false;
+    }
+
+    private void waitForStart() {
+    }
+
     @Override
     public void loop() {
-        telemetry.addLine("Press A to reset Yaw");
-        telemetry.addLine("Hold left bumper to drive in robot relative");
+        telemetry.addLine("Restart teleop to reset Yaw");
         telemetry.addLine("The left joystick sets the robot direction");
         telemetry.addLine("Moving the right joystick left and right turns the robot");
 
-        // If you press the A button, then you reset the Yaw to be zero from the way
-        // the robot is currently pointing
-        if (gamepad1.a) {
-            imu.resetYaw();
-        }
         // If you press the left bumper, you get a drive from the point of view of the robot
         // (much like driving an RC vehicle)
-        if (gamepad1.left_bumper) {
+        if (gamepad2.dpad_down) {
             drive(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
         } else {
             driveFieldRelative(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
@@ -132,6 +226,7 @@ public class TeleopFieldCentric extends OpMode {
         // Finally, call the drive method with robot relative forward and right amounts
         drive(newForward, newRight, rotate);
     }
+
 
     // Thanks to FTC16072 for sharing this code!!
     public void drive(double forward, double right, double rotate) {
