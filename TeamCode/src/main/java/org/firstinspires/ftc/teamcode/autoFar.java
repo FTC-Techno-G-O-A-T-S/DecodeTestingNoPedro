@@ -68,7 +68,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 @Autonomous
-public class autoRed extends LinearOpMode {
+public class autoFar extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
@@ -160,18 +160,13 @@ public class autoRed extends LinearOpMode {
         //telemetry.addData("Back  left/Right", "%4.2f, %4.2f", blPower, brPower);
         telemetry.addData("outtake power", outtake.getVelocity());
         telemetry.update();
-        while (opModeIsActive() && runtime.seconds() < 3) {
+        while (opModeIsActive() && runtime.seconds() < 5) {
             fl.setPower(.25);
-            fr.setPower(-.25);
-            bl.setPower(-.25);
+            fr.setPower(.25);
+            bl.setPower(.25);
             br.setPower(.25);
         }
-        while (opModeIsActive() && runtime.seconds() < 6) {
-            fl.setPower(-.25);
-            fr.setPower(-.25);
-            bl.setPower(-.25);
-            br.setPower(-.25);
-        }
+
         /*while (opModeIsActive() && runtime.seconds() < 10) {
             if (opModeIsActive()) {
                 ElapsedTime timer = new ElapsedTime();
