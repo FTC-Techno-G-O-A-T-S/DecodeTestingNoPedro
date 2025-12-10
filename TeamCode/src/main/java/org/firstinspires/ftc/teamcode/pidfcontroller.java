@@ -35,8 +35,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
-//import org.firstinspires.ftc.teamcode.controllers.PIDFController;
 import com.seattlesolvers.solverslib.controller.PIDFController;
 
 /*
@@ -68,14 +69,12 @@ import com.seattlesolvers.solverslib.controller.PIDFController;
  */
 @Config
 @TeleOp(name="pidfcontroller", group="Linear OpMode")
-@Disabled
+//@Disabled
 public class pidfcontroller extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotorEx outtake = null;
-    //private PIDFController outtakePIDF = new PIDFController(0.0008, 0, 0, 0.00036);
-    //private PIDFController outtakePIDF = new PIDFController(0.0008,0,0,0.00036);
 
 
 
@@ -86,10 +85,13 @@ public class pidfcontroller extends LinearOpMode {
         // to the names assigned during the robot configuration step on the DS or RC devices.
 
         outtake = hardwareMap.get(DcMotorEx.class, "outtake");
+        outtake.setDirection(DcMotorSimple.Direction.REVERSE);
         outtake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         outtake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        PIDFController outtakePIDF = new PIDFController(0.0008,0,0,0.00036);
-        outtake.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, outtakePIDF);
+        //PIDFCoefficients outtakePIDF = new PIDFCoefficients(0,0,0,0.0005);
+        //outtake.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, outtakePIDF);
+        PIDFController outtakePIDF = new PIDFController(0.05,0,0.01,0.6);
+
 
 
 
@@ -105,14 +107,19 @@ public class pidfcontroller extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
 
         while (opModeIsActive()) {
+            //boolean usePIDF = true;
             double target = 1000; //ticks per sec
-            outtake.setVelocity(target);
+            //outtake.setVelocity(outtakePIDF.calculate(outtake.getVelocity(), target));
+            //outtake.setVelocity(target);
+            double velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
+            outtake.setVelocity(velocity);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("target", target);
             telemetry.addData("outtake velocity", outtake.getVelocity());
             telemetry.addData("outtake power", outtake.getPower());
+            telemetry.addData("output", velocity);
             telemetry.update();
         }
     }}

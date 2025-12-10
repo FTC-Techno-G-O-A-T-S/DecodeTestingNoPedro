@@ -95,7 +95,7 @@ public class teleop extends LinearOpMode {
     public static double kI = 0;
     public static double kD = 0;
     public static double kF = 0;
-    PIDFController pidf = new PIDFController();
+    //PIDFController pidf = new PIDFController();
     public static double output = 0;
     public static double velocity = 0;
     public static double setpoint = 0;
@@ -139,6 +139,7 @@ public class teleop extends LinearOpMode {
         intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         outtake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         outtake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        outtake.setDirection(DcMotorSimple.Direction.REVERSE);
         hood.setDirection(Servo.Direction.FORWARD);
         ur1.setDirection(Servo.Direction.REVERSE);
         ur2.setDirection(Servo.Direction.REVERSE);
@@ -185,11 +186,11 @@ public class teleop extends LinearOpMode {
             }
             //kicker
             if(gamepad2.a){
-                br3.setPosition(0.35);
+                br3.setPosition(0.42);
                 //ur1.setPosition(0.1);
                 //ur2.setPosition(0.1);
             } else{
-                br3.setPosition(0.75);
+                br3.setPosition(0.76);
                 //ur1.setPosition(0.5);
                 //ur2.setPosition(0.5);
             }
