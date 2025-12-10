@@ -29,19 +29,15 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 //import org.firstinspires.ftc.teamcode.controllers.PIDFController;
+import com.seattlesolvers.solverslib.controller.PIDFController;
 
 /*
  * This file contains an example of a Linear "OpMode".
@@ -71,23 +67,16 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 @Config
-@TeleOp(name="PIDFController", group="Linear OpMode")
+@TeleOp(name="pidfcontroller", group="Linear OpMode")
 @Disabled
-public class PIDFController extends LinearOpMode {
+public class pidfcontroller extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotorEx outtake = null;
-    public static double Kp = 0;
-    public static double Ki = 0;
-    public static double Kd = 0;
-    public static double reference = 0;
-    public static double integralSum = 0;
-    public static double lastError = 0;
-    public static double error = 0;
-    public static double encoderPosition = 0;
-    public static double derivative = 0;
-    public static double out = 0;
+    //private PIDFController outtakePIDF = new PIDFController(0.0008, 0, 0, 0.00036);
+    //private PIDFController outtakePIDF = new PIDFController(0.0008,0,0,0.00036);
+
 
 
 
@@ -97,20 +86,10 @@ public class PIDFController extends LinearOpMode {
         // to the names assigned during the robot configuration step on the DS or RC devices.
 
         outtake = hardwareMap.get(DcMotorEx.class, "outtake");
-
-
-        // ########################################################################################
-        // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
-        // ########################################################################################
-        // Most robots need the motors on one side to be reversed to drive forward.
-        // The motor reversals shown here are for a "direct drive" robot (the wheels turn the same direction as the motor shaft)
-        // If your robot has additional gear reductions or uses a right-angled drive, it's important to ensure
-        // that your motors are turning in the correct direction.  So, start out with the reversals here, BUT
-        // when you first test your robot, push the left joystick forward and observe the direction the wheels turn.
-        // Reverse the direction (flip FORWARD <-> REVERSE ) of any wheel that runs backward
-        // Keep testing until ALL the wheels move the robot forward when you push the left joystick forward.
         outtake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         outtake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        PIDFController outtakePIDF = new PIDFController(0.0008,0,0,0.00036);
+        outtake.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, outtakePIDF);
 
 
 
@@ -126,56 +105,14 @@ public class PIDFController extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
 
         while (opModeIsActive()) {
-            /*
-
-             * Proportional Integral Derivative Controller
-
-             */
-
-            Kp = 0;
-            Ki = 0;
-            Kd = 0;
-
-            reference = 0;
-
-            integralSum = 0;
-
-            lastError = 0;
-
-// Elapsed timer class from SDK, please use it, it's epic
-            ElapsedTime timer = new ElapsedTime();
-
-            while (outtake.getVelocity() < reference) {
-
-
-                // obtain the encoder position
-                encoderPosition = outtake.getVelocity();
-                // calculate the error
-                error = reference - encoderPosition;
-
-                // rate of change of the error
-                derivative = (error - lastError) / timer.seconds();
-
-                // sum of all error over time
-                integralSum = integralSum + (error * timer.seconds());
-
-                out = (Kp * error) + (Ki * integralSum) + (Kd * derivative);
-
-                outtake.setPower(out);
-
-                lastError = error;
-
-                // reset the timer for next time
-                timer.reset();
-
-            }
+            double target = 1000; //ticks per sec
+            outtake.setVelocity(target);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("target", target);
             telemetry.addData("outtake velocity", outtake.getVelocity());
             telemetry.addData("outtake power", outtake.getPower());
-            telemetry.addData("reference", reference);
-            telemetry.addData("out", out);
             telemetry.update();
         }
     }}
