@@ -75,7 +75,7 @@ public class pidfcontroller extends LinearOpMode {
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotorEx outtake = null;
-
+    //public static PIDFCoefficients outtakePIDF = (0.05, 0, 0.01, 0.6);
 
 
 
@@ -90,7 +90,7 @@ public class pidfcontroller extends LinearOpMode {
         outtake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //PIDFCoefficients outtakePIDF = new PIDFCoefficients(0,0,0,0.0005);
         //outtake.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, outtakePIDF);
-        PIDFController outtakePIDF = new PIDFController(0.05,0,0.01,0.6);
+        PIDFController outtakePIDF = new PIDFController( 1.7,0.001,0.27,0.7);
 
 
 
@@ -108,7 +108,7 @@ public class pidfcontroller extends LinearOpMode {
 
         while (opModeIsActive()) {
             //boolean usePIDF = true;
-            double target = 1000; //ticks per sec
+            double target = 2200; //ticks per sec
             //outtake.setVelocity(outtakePIDF.calculate(outtake.getVelocity(), target));
             //outtake.setVelocity(target);
             double velocity = outtakePIDF.calculate(outtake.getVelocity(), target);

@@ -90,6 +90,7 @@ public class teleop extends LinearOpMode {
     private  ServoImplEx br1 = null;
     private ServoImplEx br2 = null;
     private ServoImplEx br3 = null;
+    private Servo light = null;
     //private org.firstinspires.ftc.teamcode.PIDFController PIDFController;
     public static double kP = 0;
     public static double kI = 0;
@@ -119,6 +120,7 @@ public class teleop extends LinearOpMode {
         br1 = hardwareMap.get(ServoImplEx.class, "br1");
         br2 = hardwareMap.get(ServoImplEx.class, "br2");
         br3 = hardwareMap.get(ServoImplEx.class,"br3");
+        light = hardwareMap.get(Servo.class, "light");
 
 
         // ########################################################################################
@@ -214,6 +216,9 @@ public class teleop extends LinearOpMode {
                 outtake.setVelocity(0);
             }
 
+            if (gamepad2.options) {
+                light.setPosition(0.333);
+            }
             // Calculates the output of the PIDF algorithm based on sensor
             // readings. Requires both the measured value
             // and the desired setpoint
