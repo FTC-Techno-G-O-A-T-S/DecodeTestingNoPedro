@@ -90,7 +90,7 @@ public class pidfcontroller extends LinearOpMode {
         outtake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //PIDFCoefficients outtakePIDF = new PIDFCoefficients(0,0,0,0.0005);
         //outtake.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, outtakePIDF);
-        PIDFController outtakePIDF = new PIDFController( 1.7,0.001,0.27,0.7);
+        PIDFController outtakePIDF = new PIDFController( 1.9,0.001,0.27,0.7);
 
 
 

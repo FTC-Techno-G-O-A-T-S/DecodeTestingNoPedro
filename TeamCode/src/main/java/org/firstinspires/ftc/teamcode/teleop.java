@@ -205,8 +205,8 @@ public class teleop extends LinearOpMode {
                 intake.setPower(0);
             }
 
-            //outtake
-            if (gamepad2.dpad_right) {
+            //outtake 2050 is good shoot
+            /*if (gamepad2.dpad_right) {
                 outtake.setPower(0.86);
             } if (gamepad2.right_trigger > 0.4) {
                 outtake.setVelocity(2500);
@@ -214,11 +214,7 @@ public class teleop extends LinearOpMode {
                 outtake.setPower(1);
             } else {
                 outtake.setVelocity(0);
-            }
-
-            if (gamepad2.options) {
-                light.setPosition(0.333);
-            }
+            }*/
             // Calculates the output of the PIDF algorithm based on sensor
             // readings. Requires both the measured value
             // and the desired setpoint
