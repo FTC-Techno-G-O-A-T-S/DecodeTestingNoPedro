@@ -29,6 +29,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import static com.qualcomm.robotcore.util.Range.clip;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -41,7 +43,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.controller.PController;
-
+import com.seattlesolvers.solverslib.controller.PIDFController;
 
 
 /*
@@ -146,6 +148,8 @@ public class teleop extends LinearOpMode {
         ur1.setDirection(Servo.Direction.REVERSE);
         ur2.setDirection(Servo.Direction.REVERSE);
 
+        PIDFController outtakePIDF = new PIDFController( 1.9,0.001,0.27,0.7);//tuned 12-11-25
+
 
         // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Initialized");
@@ -192,7 +196,7 @@ public class teleop extends LinearOpMode {
                 //ur1.setPosition(0.1);
                 //ur2.setPosition(0.1);
             } else{
-                br3.setPosition(0.76);
+                br3.setPosition(0.85);
                 //ur1.setPosition(0.5);
                 //ur2.setPosition(0.5);
             }
@@ -215,42 +219,28 @@ public class teleop extends LinearOpMode {
             } else {
                 outtake.setVelocity(0);
             }*/
-            // Calculates the output of the PIDF algorithm based on sensor
-            // readings. Requires both the measured value
-            // and the desired setpoint
-            /*output = pidf.calculate(
-                //outtake.getCurrentPosition(), setpoint
-            );*/
 
-            /*
-             * A sample control loop for a motor
-             */
-            //PController pController = new PController(kP);
-
-        // We set the setpoint here.
-        // Now we don't have to declare the setpoint
-        // in our calculate() method arguments.
-           // pController.setSetPoint(velocity);
-
-        // perform the control loop
-            /*
-             * The loop checks to see if the controller has reached
-             * the desired setpoint within a specified tolerance
-             * range
-             *//*
-            while (!pController.atSetPoint()) {
-                output = pController.calculate(
-                        outtake.getVelocity()  // the measured value
-                );
-                outtake.setVelocity(output);
+            double target = 0; //ticks per sec
+            //double speed = outtake.getVelocity(); //outtake speed for light
+            if (gamepad2.right_trigger > 0.4) {
+                target = 2350;
+            } else {
+                //outtake.setVelocity(0);
             }
-            outtake.setVelocity(0); // stop the motor
+            /*if (velocity > 0) {
+                outtake.setVelocity(velocity);
+            } */
+            double velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
+            //double speed = Math.abs(velocity);
+            double speed = clip(velocity, 0, 2400); //may need to be higher to give more room for pidf
+            outtake.setVelocity(speed);
 
-        // NOTE: motors have internal PID control
 
-*/
-
-
+            if (outtake.getVelocity() >= 2000) {
+                light.setPosition(0.5);
+            } else {
+                light.setPosition(0.277);
+            }
 
 
 
@@ -323,6 +313,8 @@ public class teleop extends LinearOpMode {
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", backLeftPower, backRightPower);
             telemetry.addData("outtake velocity", outtake.getVelocity());
             telemetry.addData("outtake power", outtake.getPower());
+            telemetry.addData("target", target);
+            telemetry.addData("output", velocity);
             telemetry.update();
         }
     }}

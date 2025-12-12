@@ -158,138 +158,75 @@ public class autoBlue extends LinearOpMode {
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         //telemetry.addData("Front left/Right", "%4.2f, %4.2f", flPower, frPower);
         //telemetry.addData("Back  left/Right", "%4.2f, %4.2f", blPower, brPower);
-        telemetry.addData("outtake power", outtake.getVelocity());
+        telemetry.addData("outtake velocity", outtake.getVelocity());
         telemetry.update();
-        while (opModeIsActive() && runtime.seconds() < 3) {
-            fl.setPower(-.25);
+        br1.setPosition(0.5);
+        br2.setPosition(0.5);
+        ur1.setPosition(0.5);
+        ur2.setPosition(0.5);
+        br3.setPosition(0.85);
+        while (opModeIsActive() && runtime.seconds() < 1.5) {
+            fl.setPower(.25);
             fr.setPower(.25);
             bl.setPower(.25);
-            br.setPower(-.25);
+            br.setPower(.25);
         }
-        while (opModeIsActive() && runtime.seconds() < 6) {
-            fl.setPower(-.25);
-            fr.setPower(-.25);
-            bl.setPower(-.25);
-            br.setPower(-.25);
+        while (opModeIsActive() && runtime.seconds() < 10) {
+            fl.setPower(0);
+            fr.setPower(0);
+            bl.setPower(0);
+            br.setPower(0);
+            outtake.setVelocity(2000);
         }
-        /*while (opModeIsActive() && runtime.seconds() < 10) {
-            if (opModeIsActive()) {
-                ElapsedTime timer = new ElapsedTime();
-
-                // Start motorA immediately
-                outtake.setPower(1);
-
-                // Loop while op mode is active
-                while (opModeIsActive()) {
-                    double elapsed = timer.seconds();
-
-                    // After 5 seconds, start motorB
-                    if (elapsed >= 5.0 && br1.getPosition() != 1) {
-                        br1.setPosition(1);
-                        br1.setPosition(1);
-                        br2.setPosition(1);
-                        ur1.setPosition(.1);
-                        ur2.setPosition(.1);
-                    }
-
-                    // After 1.5 seconds, stop motorB
-                    if (elapsed >= 1.5 && br1.getPosition() != 0.5) {
-                        br1.setPosition(.5);
-                        br1.setPosition(.5);
-                        br2.setPosition(.5);
-                        ur1.setPosition(.5);
-                        ur2.setPosition(.5);
-                    }
-                    // After 5 seconds, start motorB
-                    if (elapsed >= 2 && br1.getPosition() != .35) {
-                        br3.setPosition(0.35);
-                    }
-
-                    // After 1.5 seconds, stop motorB
-                    if (elapsed >= 5 && br1.getPosition() != 0.75) {
-                        br3.setPosition(0.75);
-
-                    }
-
-                    // After 20 seconds, stop motorA
-                    if (elapsed >= 20.0 && outtake.getPower() != 0) {
-                        outtake.setPower(0);
-                    }
-                }
-            }
-        }*/
+        while (opModeIsActive() && runtime.seconds() <11) {
             br1.setPosition(.1);
             br2.setPosition(.1);
-            ur1.setPosition(1);
-            ur2.setPosition(1);
-            br3.setPosition(.1);
+            ur1.setPosition(.1);
+            ur2.setPosition(.1);
+        }
+        while (opModeIsActive() && runtime.seconds() <12) {
+            br1.setPosition(.1);
+            br2.setPosition(.1);
+            ur1.setPosition(.1);
+            ur2.setPosition(.1);
+            br3.setPosition(0.42);
+        }
+        while (opModeIsActive() && runtime.seconds() < 13) {
+            br3.setPosition(0.85);
+        }
+        while (opModeIsActive() && runtime.seconds() < 14) {
+            br1.setPosition(.1);
+            br2.setPosition(.1);
+            ur1.setPosition(.1);
+            ur2.setPosition(.1);
+            br3.setPosition(0.42);
+        }
+        while (opModeIsActive() && runtime.seconds() < 15) {
+            br3.setPosition(0.85);
+        }
+        while (opModeIsActive() && runtime.seconds() < 17) {
+            br1.setPosition(.1);
+            br2.setPosition(.1);
+            ur1.setPosition(.1);
+            ur2.setPosition(.1);
+            br3.setPosition(0.42);
+        }
+        while (opModeIsActive() && runtime.seconds() < 23) {
+            outtake.setPower(0);
+            br1.setPosition(0.5);
+            br2.setPosition(0.5);
+            ur1.setPosition(0.5);
+            ur2.setPosition(0.5);
+            br3.setPosition(0.85);
+        }
+
+        telemetry.addData("outtake velocity", outtake.getVelocity());
+        telemetry.update();
             runtime.reset();
         }
 
 
 
-
-
-
-
-
-
-
-            // run until the end of the match (driver presses STOP)
-
-/*
-            //DRIVE CODE
-            double max;
-
-            // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-            double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
-            double lateral =  gamepad1.left_stick_x;
-            double yaw     =  gamepad1.right_stick_x;
-
-            // Combine the joystick requests for each axis-motion to determine each wheel's power.
-            // Set up a variable for each drive wheel to save the power level for telemetry.
-            double flPower  = axial + lateral + yaw;
-            double frPower = axial - lateral - yaw;
-            double blPower   = axial - lateral + yaw;
-            double brPower  = axial + lateral - yaw;
-
-            // Normalize the values so no wheel power exceeds 100%
-            // This ensures that the robot maintains the desired motion.
-        max = Math.max(Math.abs(flPower), Math.abs(frPower));
-        max = Math.max(max, Math.abs(blPower));
-        max = Math.max(max, Math.abs(brPower));
-
-            if (max > 1.0) {
-                flPower  /= max;
-                frPower /= max;
-                blPower   /= max;
-                brPower  /= max;
-            }
-
-            // This is test code:
-            //
-            // Uncomment the following code to test your motor directions.
-            // Each button should make the corresponding motor run FORWARD.
-            //   1) First get all the motors to take to correct positions on the robot
-            //      by adjusting your Robot Configuration if necessary.
-            //   2) Then make sure they run in the correct direction by modifying the
-            //      the setDirection() calls above.
-            // Once the correct motors move in the correct direction re-comment this code.
-
-            /*
-            frontLeftPower  = gamepad1.x ? 1.0 : 0.0;  // X gamepad
-            backLeftPower   = gamepad1.a ? 1.0 : 0.0;  // A gamepad
-            frontRightPower = gamepad1.y ? 1.0 : 0.0;  // Y gamepad
-            backRightPower  = gamepad1.b ? 1.0 : 0.0;  // B gamepad
-            */
-/*
-            // Send calculated power to wheels
-            fl.setPower(flPower);
-            fr.setPower(frPower);
-            bl.setPower(blPower);
-            br.setPower(brPower);
-*/
-            // Show the elapsed game time and wheel power.
 
         }
 

@@ -69,7 +69,7 @@ import com.seattlesolvers.solverslib.controller.PIDFController;
  */
 @Config
 @TeleOp(name="pidfcontroller", group="Linear OpMode")
-//@Disabled
+@Disabled
 public class pidfcontroller extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
