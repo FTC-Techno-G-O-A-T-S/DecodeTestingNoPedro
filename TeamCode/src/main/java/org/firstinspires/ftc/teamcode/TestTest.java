@@ -69,7 +69,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 @Autonomous
-public class autoBlue extends LinearOpMode {
+public class TestTest extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
@@ -167,7 +167,7 @@ public class autoBlue extends LinearOpMode {
         ur1.setPosition(0.5);
         ur2.setPosition(0.5);
         br3.setPosition(0.85);
-        outtake.setVelocity(1000);
+        outtake.setVelocity(850);
         hood.setPosition(.95);
         while (opModeIsActive() && runtime.seconds() < .85) {
             fl.setPower(.25);
@@ -175,80 +175,217 @@ public class autoBlue extends LinearOpMode {
             bl.setPower(.25);
             br.setPower(.25);
         }
-        while (opModeIsActive() && runtime.seconds() < 10) {
+        while (opModeIsActive() && runtime.seconds() < 1) {
             fl.setPower(0);
             fr.setPower(0);
             bl.setPower(0);
             br.setPower(0);
         }
-        while (opModeIsActive() && runtime.seconds() <10.3) {
+        while (opModeIsActive() && runtime.seconds() <1.3) {
             //Needs +.3 Seconds
             br1.setPosition(.1);
             br2.setPosition(.1);
             ur1.setPosition(.1);
             ur2.setPosition(.1);
         }
-        while (opModeIsActive() && runtime.seconds() <11) {
+        while (opModeIsActive() && runtime.seconds() <2) {
             //Needs +.7
             br1.setPosition(.5);
             br2.setPosition(.5);
             ur1.setPosition(.5);
             ur2.setPosition(.5);
         }
-        while (opModeIsActive() && runtime.seconds() <12) {
+        while (opModeIsActive() && runtime.seconds() <3) {
             // +1
             ur2.setPosition(.4);
             br3.setPosition(.44);
         }
-        while (opModeIsActive() && runtime.seconds() < 13) {
+        while (opModeIsActive() && runtime.seconds() < 4) {
             //+1
+            outtake.setVelocity(1000);
             ur2.setPosition(.5);
             br3.setPosition(0.85);
         }
-        while (opModeIsActive() && runtime.seconds() <14.8) {
+        while (opModeIsActive() && runtime.seconds() <5.8) {
             //+1.8
             br1.setPosition(.1);
             br2.setPosition(.1);
             ur1.setPosition(.1);
             ur2.setPosition(.1);
         }
-        while (opModeIsActive() && runtime.seconds() <15) {
+        while (opModeIsActive() && runtime.seconds() <6) {
             //+.2
             br1.setPosition(.5);
             br2.setPosition(.5);
             ur1.setPosition(.5);
             ur2.setPosition(.5);
         }
-        while (opModeIsActive() && runtime.seconds() <16) {
+        while (opModeIsActive() && runtime.seconds() <7) {
             //+1
             ur2.setPosition(.1);
             br3.setPosition(.44);
         }
-        while (opModeIsActive() && runtime.seconds() < 17) {
+        while (opModeIsActive() && runtime.seconds() < 8) {
             //+1
             ur2.setPosition(.5);
             br3.setPosition(0.85);
         }
-        while (opModeIsActive() && runtime.seconds() <17.8) {
+        while (opModeIsActive() && runtime.seconds() <8.8) {
             //+1.8
             br1.setPosition(.1);
             br2.setPosition(.1);
             ur1.setPosition(.1);
             ur2.setPosition(.1);
         }
-        while (opModeIsActive() && runtime.seconds() <18) {
+        while (opModeIsActive() && runtime.seconds() <9) {
             //+.2
             br1.setPosition(.5);
             br2.setPosition(.5);
             ur1.setPosition(.5);
             ur2.setPosition(.5);
         }
-        while (opModeIsActive() && runtime.seconds() <19) {
+        while (opModeIsActive() && runtime.seconds() <10) {
             //+1
             br3.setPosition(.44);
             ur2.setPosition(.1);
         }
-        while (opModeIsActive() && runtime.seconds() < 20) {
+        while (opModeIsActive() && runtime.seconds() < 11) {
+            //+1
+            br3.setPosition(0.85);
+            ur2.setPosition(.5);
+        }
+        //This is the extension start
+        while (opModeIsActive() && runtime.seconds() < 12) {
+            //+1
+            fl.setPower(-.25);
+            fr.setPower(.25);
+            bl.setPower(-.25);
+            br.setPower(.25);
+        }
+        while (opModeIsActive() && runtime.seconds() < 13.82) {
+            //+1
+            fl.setPower(.3);
+            fr.setPower(.3);
+            bl.setPower(.3);
+            br.setPower(.3);
+        }
+        while (opModeIsActive() && runtime.seconds() < 14.32) {
+            //Turn needs +1.65 seconds to line up with row 1
+            fl.setPower(-.65);
+            fr.setPower(.65);
+            bl.setPower(-.65);
+            br.setPower(.65);
+        }
+        while (opModeIsActive() && runtime.seconds() < 15.5) {
+            //intakes row 1
+            br1.setPosition(.1);
+            br2.setPosition(.1);
+            ur1.setPosition(.1);
+            ur2.setPosition(.1);
+            intake.setVelocity(2000); //in ticks
+            fl.setPower(.45);
+            fr.setPower(.45);
+            bl.setPower(.45);
+            br.setPower(.45);
+        }
+        while (opModeIsActive() && runtime.seconds() < 16.5) {
+            //Strafes to line up
+            fl.setPower(-.5);
+            fr.setPower(1);
+            bl.setPower(.5);
+            br.setPower(-.5);
+        }
+        while (opModeIsActive() && runtime.seconds() < 17.3) {
+            //backs up for line up
+            fl.setPower(-.25);
+            fr.setPower(-.25);
+            bl.setPower(-.25);
+            br.setPower(-.25);
+        }
+        while (opModeIsActive() && runtime.seconds() < 17.5) {
+            fl.setPower(0);
+            fr.setPower(0);
+            bl.setPower(0);
+            br.setPower(0);
+        }
+        while (opModeIsActive() && runtime.seconds() < 19) {
+            fl.setPower(-.25);
+            fr.setPower(.25);
+            bl.setPower(-.25);
+            br.setPower(.25);
+        }
+        while (opModeIsActive() && runtime.seconds() <19.3) {
+            //Needs +.3 Seconds
+            fl.setPower(0);
+            fr.setPower(0);
+            bl.setPower(0);
+            br.setPower(0);
+            br1.setPosition(.1);
+            br2.setPosition(.1);
+            ur1.setPosition(.1);
+            ur2.setPosition(.1);
+        }
+        while (opModeIsActive() && runtime.seconds() <20) {
+            //Needs +.7
+            br1.setPosition(.5);
+            br2.setPosition(.5);
+            ur1.setPosition(.5);
+            ur2.setPosition(.5);
+        }
+        while (opModeIsActive() && runtime.seconds() <21) {
+            // +1
+            ur2.setPosition(.4);
+            br3.setPosition(.44);
+        }
+        while (opModeIsActive() && runtime.seconds() < 22) {
+            //+1
+            ur2.setPosition(.5);
+            br3.setPosition(0.85);
+        }
+        while (opModeIsActive() && runtime.seconds() <23.8) {
+            //+1.8
+            br1.setPosition(.1);
+            br2.setPosition(.1);
+            ur1.setPosition(.1);
+            ur2.setPosition(.1);
+        }
+        while (opModeIsActive() && runtime.seconds() <24) {
+            //+.2
+            br1.setPosition(.5);
+            br2.setPosition(.5);
+            ur1.setPosition(.5);
+            ur2.setPosition(.5);
+        }
+        while (opModeIsActive() && runtime.seconds() <25) {
+            //+1
+            ur2.setPosition(.1);
+            br3.setPosition(.44);
+        }
+        while (opModeIsActive() && runtime.seconds() < 26) {
+            //+1
+            ur2.setPosition(.5);
+            br3.setPosition(0.85);
+        }
+        while (opModeIsActive() && runtime.seconds() <27.8) {
+            //+1.8
+            br1.setPosition(.1);
+            br2.setPosition(.1);
+            ur1.setPosition(.1);
+            ur2.setPosition(.1);
+        }
+        while (opModeIsActive() && runtime.seconds() <28) {
+            //+.2
+            br1.setPosition(.5);
+            br2.setPosition(.5);
+            ur1.setPosition(.5);
+            ur2.setPosition(.5);
+        }
+        while (opModeIsActive() && runtime.seconds() <29) {
+            //+1
+            br3.setPosition(.44);
+            ur2.setPosition(.1);
+        }
+        while (opModeIsActive() && runtime.seconds() < 30) {
             //+1
             br3.setPosition(0.85);
             ur2.setPosition(.5);
@@ -257,12 +394,12 @@ public class autoBlue extends LinearOpMode {
 
         telemetry.addData("outtake velocity", outtake.getVelocity());
         telemetry.update();
-            runtime.reset();
-        }
+        runtime.reset();
+    }
 
 
 
 
-        }
+}
 
 

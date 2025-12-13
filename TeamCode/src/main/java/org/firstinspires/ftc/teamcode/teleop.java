@@ -170,7 +170,7 @@ public class teleop extends LinearOpMode {
             if (gamepad2.triangle){
                 hood.setPosition(0.75);
             } else{
-                hood.setPosition(.85);
+                hood.setPosition(.95);
             }
             //ramp
             if (gamepad2.square) {
@@ -232,7 +232,7 @@ public class teleop extends LinearOpMode {
             if (outtake.getVelocity() >= 2100) {
                 light.setPosition(0.5);
             } else {
-                light.setPosition(0.333);
+                light.setPosition(0.277);
             }
 
             TelemetryPacket packet = new TelemetryPacket();
