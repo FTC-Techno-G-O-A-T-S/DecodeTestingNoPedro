@@ -34,6 +34,7 @@ import static com.qualcomm.robotcore.util.Range.clip;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -94,14 +95,15 @@ public class teleop extends LinearOpMode {
     private ServoImplEx br3 = null;
     private Servo light = null;
     //private org.firstinspires.ftc.teamcode.PIDFController PIDFController;
-    public static double kP = 0;
-    public static double kI = 0;
-    public static double kD = 0;
-    public static double kF = 0;
+    //public static double kP = 0;
+    //public static double kI = 0;
+    //public static double kD = 0;
+    //public static double kF = 0;
     //PIDFController pidf = new PIDFController();
-    public static double output = 0;
-    public static double velocity = 0;
-    public static double setpoint = 0;
+    //public static double output = 0;
+    //public static double velocity = 0;
+    //public static double setpoint = 0;
+    public static double out = 0;
 
 
 
@@ -168,7 +170,7 @@ public class teleop extends LinearOpMode {
             if (gamepad2.triangle){
                 hood.setPosition(0.75);
             } else{
-                hood.setPosition(.915);
+                hood.setPosition(.85);
             }
             //ramp
             if (gamepad2.square) {
@@ -176,19 +178,16 @@ public class teleop extends LinearOpMode {
                 ur2.setPosition(0.1);
                 br1.setPosition(0.1);
                 br2.setPosition(0.1);
-                //br3.setPosition(0.1);
             } else if (gamepad2.circle) {
                 ur1.setPosition(1.0);
                 ur2.setPosition(1.0);
                 br1.setPosition(1.0);
                 br2.setPosition(1.0);
-                //br3.setPosition(1.0);
             } else {
                 ur1.setPosition(0.5);
                 ur2.setPosition(0.5);
                 br1.setPosition(0.5);
                 br2.setPosition(0.5);
-                //br3.setPosition(0.5);
             }
             //kicker
             if(gamepad2.a){
@@ -221,27 +220,24 @@ public class teleop extends LinearOpMode {
             }*/
 
             double target = 0; //ticks per sec
-            //double speed = outtake.getVelocity(); //outtake speed for light
             if (gamepad2.right_trigger > 0.4) {
-                target = 2350;
-            } else {
-                //outtake.setVelocity(0);
+                target = 2400;
             }
-            /*if (velocity > 0) {
-                outtake.setVelocity(velocity);
-            } */
             double velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
             //double speed = Math.abs(velocity);
-            double speed = clip(velocity, 0, 2400); //may need to be higher to give more room for pidf
+            double speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
             outtake.setVelocity(speed);
 
 
-            if (outtake.getVelocity() >= 2000) {
+            if (outtake.getVelocity() >= 2100) {
                 light.setPosition(0.5);
             } else {
-                light.setPosition(0.277);
+                light.setPosition(0.333);
             }
 
+            TelemetryPacket packet = new TelemetryPacket();
+            packet.put("outtake speed", outtake.getVelocity());
+            telemetry.update();
 
 
 
