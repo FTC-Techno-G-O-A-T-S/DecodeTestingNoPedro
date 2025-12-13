@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 //import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -137,6 +138,7 @@ public class autoBlue extends LinearOpMode {
         bl.setDirection(DcMotor.Direction.REVERSE);
         fr.setDirection(DcMotor.Direction.REVERSE);
         br.setDirection(DcMotor.Direction.FORWARD);
+        outtake.setDirection(DcMotor.Direction.REVERSE);
         intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         outtake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -154,19 +156,20 @@ public class autoBlue extends LinearOpMode {
         runtime.reset();
         //hood.setPosition(1);
 
+        telemetry.addData("outtake", outtake.getVelocity());
 
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         //telemetry.addData("Front left/Right", "%4.2f, %4.2f", flPower, frPower);
         //telemetry.addData("Back  left/Right", "%4.2f, %4.2f", blPower, brPower);
-        telemetry.addData("outtake velocity", outtake.getVelocity());
         telemetry.update();
         br1.setPosition(0.5);
         br2.setPosition(0.5);
         ur1.setPosition(0.5);
         ur2.setPosition(0.5);
         br3.setPosition(0.85);
-        outtake.setVelocity(2000);
-        while (opModeIsActive() && runtime.seconds() < 1.5) {
+        outtake.setVelocity(1000);
+        hood.setPosition(.95);
+        while (opModeIsActive() && runtime.seconds() < .85) {
             fl.setPower(.25);
             fr.setPower(.25);
             bl.setPower(.25);
@@ -191,14 +194,14 @@ public class autoBlue extends LinearOpMode {
             ur2.setPosition(.5);
         }
         while (opModeIsActive() && runtime.seconds() <12) {
-            ur2.setPosition(.1);
+            ur2.setPosition(.4);
             br3.setPosition(.44);
         }
         while (opModeIsActive() && runtime.seconds() < 13) {
             ur2.setPosition(.5);
             br3.setPosition(0.85);
         }
-        while (opModeIsActive() && runtime.seconds() <14.3) {
+        while (opModeIsActive() && runtime.seconds() <14.8) {
             br1.setPosition(.1);
             br2.setPosition(.1);
             ur1.setPosition(.1);
@@ -218,7 +221,7 @@ public class autoBlue extends LinearOpMode {
             ur2.setPosition(.5);
             br3.setPosition(0.85);
         }
-        while (opModeIsActive() && runtime.seconds() <17.3) {
+        while (opModeIsActive() && runtime.seconds() <17.8) {
             br1.setPosition(.1);
             br2.setPosition(.1);
             ur1.setPosition(.1);
@@ -237,6 +240,30 @@ public class autoBlue extends LinearOpMode {
         while (opModeIsActive() && runtime.seconds() < 20) {
             br3.setPosition(0.85);
             ur2.setPosition(.5);
+        }
+        while (opModeIsActive() && runtime.seconds() < 21) {
+            fl.setPower(-.25);
+            fr.setPower(.25);
+            bl.setPower(-.25);
+            br.setPower(.25);
+        }
+        while (opModeIsActive() && runtime.seconds() < 23) {
+            fl.setPower(.25);
+            fr.setPower(.25);
+            bl.setPower(.25);
+            br.setPower(.25);
+        }
+        while (opModeIsActive() && runtime.seconds() < 21) {
+            fl.setPower(-.25);
+            fr.setPower(.25);
+            bl.setPower(-.25);
+            br.setPower(.25);
+        }
+        while (opModeIsActive() && runtime.seconds() < 23) {
+            fl.setPower(.25);
+            fr.setPower(.25);
+            bl.setPower(.25);
+            br.setPower(.25);
         }
 
         telemetry.addData("outtake velocity", outtake.getVelocity());
