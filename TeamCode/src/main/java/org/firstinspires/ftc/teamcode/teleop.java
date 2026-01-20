@@ -31,9 +31,9 @@ package org.firstinspires.ftc.teamcode;
 
 import static com.qualcomm.robotcore.util.Range.clip;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+//import com.acmerobotics.dashboard.FtcDashboard;
+//import com.acmerobotics.dashboard.config.Config;
+//import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -43,8 +43,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.seattlesolvers.solverslib.controller.PController;
-import com.seattlesolvers.solverslib.controller.PIDFController;
+//import com.seattlesolvers.solverslib.controller.PController;
+//import com.seattlesolvers.solverslib.controller.PIDFController;
 
 
 /*
@@ -74,7 +74,7 @@ import com.seattlesolvers.solverslib.controller.PIDFController;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
-@Config
+//@Config
 @TeleOp(name="teleop", group="Linear OpMode")
 //@Disabled
 public class teleop extends LinearOpMode {
@@ -150,7 +150,7 @@ public class teleop extends LinearOpMode {
         ur1.setDirection(Servo.Direction.REVERSE);
         ur2.setDirection(Servo.Direction.REVERSE);
 
-        PIDFController outtakePIDF = new PIDFController( 1.9,0.001,0.27,0.7);//tuned 12-11-25
+        //PIDFController outtakePIDF = new PIDFController( 1.9,0.001,0.27,0.7);//tuned 12-11-25
 
 
         // Wait for the game to start (driver presses START)
@@ -223,10 +223,10 @@ public class teleop extends LinearOpMode {
             if (gamepad2.right_trigger > 0.4) {
                 target = 2400;
             }
-            double velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
+            //double velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
             //double speed = Math.abs(velocity);
-            double speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
-            outtake.setVelocity(speed);
+            //double speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
+            //outtake.setVelocity(speed);
 
 
             if (outtake.getVelocity() >= 2100) {
@@ -310,7 +310,10 @@ public class teleop extends LinearOpMode {
             telemetry.addData("outtake velocity", outtake.getVelocity());
             telemetry.addData("outtake power", outtake.getPower());
             telemetry.addData("target", target);
-            telemetry.addData("output", velocity);
+            //telemetry.addData("output", velocity);
+            telemetry.addData("left deadwheel", fl.getCurrentPosition());
+            telemetry.addData("right deadwheel", br.getCurrentPosition());
+            telemetry.addData("strafe deadwheel", bl.getCurrentPosition());
             telemetry.update();
         }
     }}
