@@ -43,8 +43,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
-//import com.seattlesolvers.solverslib.controller.PController;
-//import com.seattlesolvers.solverslib.controller.PIDFController;
+import com.seattlesolvers.solverslib.controller.PController;
+import com.seattlesolvers.solverslib.controller.PIDFController;
 
 
 /*
@@ -138,9 +138,9 @@ public class teleop extends LinearOpMode {
         // Reverse the direction (flip FORWARD <-> REVERSE ) of any wheel that runs backward
         // Keep testing until ALL the wheels move the robot forward when you push the left joystick forward.
         fl.setDirection(DcMotor.Direction.FORWARD);
-        bl.setDirection(DcMotor.Direction.REVERSE);
+        bl.setDirection(DcMotor.Direction.FORWARD);
         fr.setDirection(DcMotor.Direction.REVERSE);
-        br.setDirection(DcMotor.Direction.FORWARD);
+        br.setDirection(DcMotor.Direction.REVERSE);
         intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         outtake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -150,7 +150,7 @@ public class teleop extends LinearOpMode {
         ur1.setDirection(Servo.Direction.REVERSE);
         ur2.setDirection(Servo.Direction.REVERSE);
 
-        //PIDFController outtakePIDF = new PIDFController( 1.9,0.001,0.27,0.7);//tuned 12-11-25
+        PIDFController outtakePIDF = new PIDFController( 1.9,0.001,0.27,0.7);//tuned 12-11-25
 
 
         // Wait for the game to start (driver presses START)
@@ -221,12 +221,12 @@ public class teleop extends LinearOpMode {
 
             double target = 0; //ticks per sec
             if (gamepad2.right_trigger > 0.4) {
-                target = 2400;
+                target = 2000;
             }
-            //double velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
-            //double speed = Math.abs(velocity);
-            //double speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
-            //outtake.setVelocity(speed);
+            double velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
+            double speed = Math.abs(velocity);
+            speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
+            outtake.setVelocity(speed);
 
 
             if (outtake.getVelocity() >= 2100) {
