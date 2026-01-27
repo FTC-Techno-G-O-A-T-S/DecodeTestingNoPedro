@@ -31,9 +31,10 @@ package org.firstinspires.ftc.teamcode;
 
 import static com.qualcomm.robotcore.util.Range.clip;
 
-//import com.acmerobotics.dashboard.FtcDashboard;
-//import com.acmerobotics.dashboard.config.Config;
-//import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -45,6 +46,8 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.controller.PController;
 import com.seattlesolvers.solverslib.controller.PIDFController;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 
 /*
@@ -221,7 +224,7 @@ public class teleop extends LinearOpMode {
 
             double target = 0; //ticks per sec
             if (gamepad2.right_trigger > 0.4) {
-                target = 2000;
+                target = 1200;
             }
             double velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
             double speed = Math.abs(velocity);
@@ -229,17 +232,23 @@ public class teleop extends LinearOpMode {
             outtake.setVelocity(speed);
 
 
-            if (outtake.getVelocity() >= 2100) {
+            if (outtake.getVelocity() > 1020) {
                 light.setPosition(0.5);
-            } else {
+            } else if (outtake.getVelocity() < 900) {
                 light.setPosition(0.277);
-            }
+            } 
 
+            /*
             TelemetryPacket packet = new TelemetryPacket();
-            packet.put("outtake speed", outtake.getVelocity());
+            packet.put("outtake veloity", outtake.getVelocity());
             telemetry.update();
 
+            FtcDashboard dashboard = FtcDashboard.getInstance();
+            Telemetry dashboardTelemetry = dashboard.getTelemetry();
 
+            dashboardTelemetry.addData("outtake velocity", outtake.getVelocity());
+            dashboardTelemetry.update();
+            */
 
 
 
@@ -252,12 +261,12 @@ public class teleop extends LinearOpMode {
             double yaw;     //=  gamepad1.right_stick_x;
             if(gamepad1.right_trigger > 0.4) {
                 axial = -gamepad1.left_stick_y * 0.40;
-                lateral = gamepad1.left_stick_x * 0.40;
-                yaw = gamepad1.right_stick_x * 0.40;
+                yaw = gamepad1.left_stick_x * 0.40;
+                lateral = gamepad1.right_stick_x * 0.40;
             } else {
                 axial= -gamepad1.left_stick_y;
-                lateral = gamepad1.left_stick_x;
-                yaw = gamepad1.right_stick_x;
+                yaw = gamepad1.left_stick_x;
+                lateral = gamepad1.right_stick_x;
             }
 
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
