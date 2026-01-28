@@ -239,12 +239,14 @@ public class teleop extends LinearOpMode {
                 light.setPosition(0.277);
             }
 
-            /*
+
             TelemetryPacket packet = new TelemetryPacket();
-            packet.put("outtake veloity", outtake.getVelocity());
+            packet.put("outtake velocity", outtake.getVelocity());
             telemetry.update();
 
             FtcDashboard dashboard = FtcDashboard.getInstance();
+            dashboard.sendTelemetryPacket(packet);
+            /*
             Telemetry dashboardTelemetry = dashboard.getTelemetry();
 
             dashboardTelemetry.addData("outtake velocity", outtake.getVelocity());
