@@ -194,7 +194,8 @@ public class teleop extends LinearOpMode {
             }
             //kicker
             if(gamepad2.a){
-                br3.setPosition(0.42);
+                br3.setPosition(0.52
+                );
                 //ur1.setPosition(0.1);
                 //ur2.setPosition(0.1);
             } else{
@@ -236,7 +237,7 @@ public class teleop extends LinearOpMode {
                 light.setPosition(0.5);
             } else if (outtake.getVelocity() < 900) {
                 light.setPosition(0.277);
-            } 
+            }
 
             /*
             TelemetryPacket packet = new TelemetryPacket();

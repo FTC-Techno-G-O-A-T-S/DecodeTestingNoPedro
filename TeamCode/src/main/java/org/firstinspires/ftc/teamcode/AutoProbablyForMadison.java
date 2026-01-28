@@ -135,9 +135,9 @@ public class AutoProbablyForMadison extends LinearOpMode {
         // Reverse the direction (flip FORWARD <-> REVERSE ) of any wheel that runs backward
         // Keep testing until ALL the wheels move the robot forward when you push the left joystick forward.
         fl.setDirection(DcMotor.Direction.FORWARD);
-        bl.setDirection(DcMotor.Direction.REVERSE);
+        bl.setDirection(DcMotor.Direction.FORWARD);
         fr.setDirection(DcMotor.Direction.REVERSE);
-        br.setDirection(DcMotor.Direction.FORWARD);
+        br.setDirection(DcMotor.Direction.REVERSE);
         outtake.setDirection(DcMotor.Direction.REVERSE);
         intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -169,11 +169,11 @@ public class AutoProbablyForMadison extends LinearOpMode {
         br3.setPosition(0.85);
         outtake.setVelocity(1200);
         hood.setPosition(.95);
-        while (opModeIsActive() && runtime.seconds() < 0) {
-            fl.setPower(.6);
-            fr.setPower(.6);
-            bl.setPower(.6);
-            br.setPower(.6);
+        while (opModeIsActive() && runtime.seconds() < 1) {
+            fl.setPower(.51);
+            fr.setPower(.51);
+            bl.setPower(.51);
+            br.setPower(.51);
         }
         while (opModeIsActive() && runtime.seconds() < 1.3) {
             fl.setPower(0);
@@ -253,11 +253,11 @@ public class AutoProbablyForMadison extends LinearOpMode {
             br3.setPosition(0.85);
             ur2.setPosition(.5);
         }
-        while (opModeIsActive() && runtime.seconds() < 12.4) {
-            fl.setPower(-.3);
-            fr.setPower(.3);
-            bl.setPower(-.3);
-            br.setPower(.3);
+        while (opModeIsActive() && runtime.seconds() < 13.4) {
+            fl.setPower(.4);
+            fr.setPower(-.4);
+            bl.setPower(-.4);
+            br.setPower(.4);
         }
         while (opModeIsActive() && runtime.seconds() < 14) {
             fl.setPower(.3);
@@ -265,13 +265,12 @@ public class AutoProbablyForMadison extends LinearOpMode {
             bl.setPower(.3);
             br.setPower(.3);
             intake.setVelocity(2000);
+            br1.setPosition(.1);
+            br2.setPosition(.1);
+            ur1.setPosition(.1);
+            ur2.setPosition(.1);
         }
-        while (opModeIsActive() && runtime.seconds() < 14.8) {
-            fl.setPower(0.3);
-            fr.setPower(0.3);
-            bl.setPower(0.3);
-            br.setPower(0.3);
-        }
+
         while (opModeIsActive() && runtime.seconds() < 15) {
             fl.setPower(0);
             fr.setPower(0);
@@ -295,7 +294,7 @@ public class AutoProbablyForMadison extends LinearOpMode {
         while (opModeIsActive() && runtime.seconds() <17) {
             // +1
             ur2.setPosition(.4);
-            br3.setPosition(.44);
+            br3.setPosition(0.52);
         }
         while (opModeIsActive() && runtime.seconds() < 18) {
             //+1
@@ -319,7 +318,7 @@ public class AutoProbablyForMadison extends LinearOpMode {
         while (opModeIsActive() && runtime.seconds() <21) {
             //+1
             ur2.setPosition(.1);
-            br3.setPosition(.44);
+            br3.setPosition(0.52);
         }
         while (opModeIsActive() && runtime.seconds() < 22) {
             //+1
@@ -342,7 +341,7 @@ public class AutoProbablyForMadison extends LinearOpMode {
         }
         while (opModeIsActive() && runtime.seconds() <25) {
             //+1
-            br3.setPosition(.44);
+            br3.setPosition(0.52);
             ur2.setPosition(.1);
         }
         while (opModeIsActive() && runtime.seconds() < 26) {
