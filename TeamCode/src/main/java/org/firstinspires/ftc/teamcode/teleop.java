@@ -154,6 +154,7 @@ public class teleop extends LinearOpMode {
         ur2.setDirection(Servo.Direction.REVERSE);
 
         PIDFController outtakePIDF = new PIDFController( 1.9,0.001,0.27,0.7);//tuned 12-11-25
+        //PIDFController outtakePIDF = new PIDFController( 0.8,0,0.9,0.7);//sart tune 1/30/26
 
 
         // Wait for the game to start (driver presses START)
@@ -194,8 +195,7 @@ public class teleop extends LinearOpMode {
             }
             //kicker
             if(gamepad2.a){
-                br3.setPosition(0.52
-                );
+                br3.setPosition(0.52);
                 //ur1.setPosition(0.1);
                 //ur2.setPosition(0.1);
             } else{
@@ -239,17 +239,11 @@ public class teleop extends LinearOpMode {
                 light.setPosition(0.277);
             }
 
-            /*
             TelemetryPacket packet = new TelemetryPacket();
-            packet.put("outtake veloity", outtake.getVelocity());
-            telemetry.update();
-
+            packet.put("outtake velocity", outtake.getVelocity());
+            packet.put("status", "alive");
             FtcDashboard dashboard = FtcDashboard.getInstance();
-            Telemetry dashboardTelemetry = dashboard.getTelemetry();
-
-            dashboardTelemetry.addData("outtake velocity", outtake.getVelocity());
-            dashboardTelemetry.update();
-            */
+            dashboard.sendTelemetryPacket(packet);
 
 
 
@@ -261,8 +255,8 @@ public class teleop extends LinearOpMode {
             double lateral; //=  gamepad1.left_stick_x;
             double yaw;     //=  gamepad1.right_stick_x;
             if(gamepad1.right_trigger > 0.4) {
-                axial = -gamepad1.left_stick_y * 0.40;
-                yaw = gamepad1.left_stick_x * 0.40;
+                axial = -gamepad1.left_stick_y * 1;
+                yaw = gamepad1.left_stick_x * 1;
                 lateral = gamepad1.right_stick_x * 0.40;
             } else {
                 axial= -gamepad1.left_stick_y;

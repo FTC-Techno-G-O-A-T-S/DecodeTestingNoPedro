@@ -172,8 +172,8 @@ public class autoBlue extends LinearOpMode {
         while (opModeIsActive() && runtime.seconds() < .85) {
             fl.setPower(.25);
             fr.setPower(.25);
-            bl.setPower(.25);
-            br.setPower(.25);
+            bl.setPower(-.25);
+            br.setPower(-.25);
         }
         while (opModeIsActive() && runtime.seconds() < 10) {
             fl.setPower(0);
@@ -246,6 +246,10 @@ public class autoBlue extends LinearOpMode {
         while (opModeIsActive() && runtime.seconds() <19) {
             //+1
             br3.setPosition(.44);
+            ur2.setPosition(.1);
+            br1.setPosition(.1);
+            br2.setPosition(.1);
+            ur1.setPosition(.1);
             ur2.setPosition(.1);
         }
         while (opModeIsActive() && runtime.seconds() < 20) {

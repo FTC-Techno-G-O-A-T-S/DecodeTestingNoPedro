@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import static com.qualcomm.robotcore.util.Range.clip;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -9,6 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.seattlesolvers.solverslib.controller.PIDFController;
 
 //import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
@@ -85,6 +88,7 @@ public class RedMadisonAuto extends LinearOpMode {
     private  ServoImplEx br1 = null;
     private ServoImplEx br2 = null;
     private ServoImplEx br3 = null;
+    private static double target = 0;
     //IMU imu;
     //int three = 2;
     //double lastbl;
@@ -135,9 +139,9 @@ public class RedMadisonAuto extends LinearOpMode {
         // Reverse the direction (flip FORWARD <-> REVERSE ) of any wheel that runs backward
         // Keep testing until ALL the wheels move the robot forward when you push the left joystick forward.
         fl.setDirection(DcMotor.Direction.FORWARD);
-        bl.setDirection(DcMotor.Direction.REVERSE);
+        bl.setDirection(DcMotor.Direction.FORWARD);
         fr.setDirection(DcMotor.Direction.REVERSE);
-        br.setDirection(DcMotor.Direction.FORWARD);
+        br.setDirection(DcMotor.Direction.REVERSE);
         outtake.setDirection(DcMotor.Direction.REVERSE);
         intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -147,6 +151,7 @@ public class RedMadisonAuto extends LinearOpMode {
         ur1.setDirection(Servo.Direction.REVERSE);
         ur2.setDirection(Servo.Direction.REVERSE);
 
+        PIDFController outtakePIDF = new PIDFController( 1.9,0.001,0.27,0.7);//tuned 12-11-25
 
         // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Initialized");
@@ -155,38 +160,37 @@ public class RedMadisonAuto extends LinearOpMode {
         waitForStart();
         runtime.reset();
         //hood.setPosition(1);
-
         telemetry.addData("outtake", outtake.getVelocity());
-
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         //telemetry.addData("Front left/Right", "%4.2f, %4.2f", flPower, frPower);
         //telemetry.addData("Back  left/Right", "%4.2f, %4.2f", blPower, brPower);
         telemetry.update();
+
         br1.setPosition(0.5);
         br2.setPosition(0.5);
         ur1.setPosition(0.5);
         ur2.setPosition(0.5);
         br3.setPosition(0.85);
-        outtake.setVelocity(1200);
         hood.setPosition(.95);
-        while (opModeIsActive() && runtime.seconds() < 0) {
-            fl.setPower(.6);
-            fr.setPower(.6);
-            bl.setPower(.6);
-            br.setPower(.6);
+        outtake.setVelocity(1200);
+        while (opModeIsActive() && runtime.seconds() < .8) {
+            fl.setPower(.51);
+            fr.setPower(.51);
+            bl.setPower(.51);
+            br.setPower(.51);
         }
-        while (opModeIsActive() && runtime.seconds() < 1.3) {
+        while (opModeIsActive() && runtime.seconds() < 1.8) {
             fl.setPower(0);
             fr.setPower(0);
             bl.setPower(0);
             br.setPower(0);
         }
-        while (opModeIsActive() && runtime.seconds() <1.6) {
+        while (opModeIsActive() && runtime.seconds() <2.2) {
             //Needs +.3 Seconds
-            br1.setPosition(.1);
-            br2.setPosition(.1);
-            ur1.setPosition(.1);
-            ur2.setPosition(.1);
+            br1.setPosition(.3);
+            br2.setPosition(.3);
+            ur1.setPosition(.3);
+            ur2.setPosition(.3);
         }
         while (opModeIsActive() && runtime.seconds() <2.3) {
             //Needs +.7
@@ -253,99 +257,116 @@ public class RedMadisonAuto extends LinearOpMode {
             br3.setPosition(0.85);
             ur2.setPosition(.5);
         }
-        while (opModeIsActive() && runtime.seconds() < 12.4) {
-            fl.setPower(.3);
-            fr.setPower(-.3);
-            bl.setPower(.3);
-            br.setPower(-.3);
+        while (opModeIsActive() && runtime.seconds() < 12.2) {
+            fl.setPower(-.4);
+            fr.setPower(.4);
+            bl.setPower(.4);
+            br.setPower(-.4);
         }
-        while (opModeIsActive() && runtime.seconds() < 14) {
+        while (opModeIsActive() && runtime.seconds() < 12.7) {
+            //little less strafe here
+            fl.setPower(.6);
+            fr.setPower(-.6);
+            bl.setPower(.6);
+            br.setPower(-.6);
+        }
+        while (opModeIsActive() && runtime.seconds() < 14.8) {
             fl.setPower(.3);
             fr.setPower(.3);
             bl.setPower(.3);
             br.setPower(.3);
             intake.setVelocity(2000);
+            br1.setPosition(.1);
+            br2.setPosition(.1);
+            ur1.setPosition(.1);
+            ur2.setPosition(.1);
         }
-        while (opModeIsActive() && runtime.seconds() < 14.8) {
-            fl.setPower(0.3);
-            fr.setPower(0.3);
-            bl.setPower(0.3);
-            br.setPower(0.3);
+        while (opModeIsActive() && runtime.seconds() < 15.8) {
+            fl.setPower(.6);
+            fr.setPower(-.6);
+            bl.setPower(-.6);
+            br.setPower(.6);
         }
-        while (opModeIsActive() && runtime.seconds() < 15) {
+        while (opModeIsActive() && runtime.seconds() < 16.2) {
+            fl.setPower(.7);
+            fr.setPower(-.7);
+            bl.setPower(.7);
+            br.setPower(-.7);
+        }
+        while (opModeIsActive() && runtime.seconds() < 16.9) {
             fl.setPower(0);
             fr.setPower(0);
             bl.setPower(0);
             br.setPower(0);
         }
-        while (opModeIsActive() && runtime.seconds() <15.3) {
+        while (opModeIsActive() && runtime.seconds() <17) {
             //Needs +.3 Seconds
             br1.setPosition(.1);
             br2.setPosition(.1);
             ur1.setPosition(.1);
             ur2.setPosition(.1);
         }
-        while (opModeIsActive() && runtime.seconds() <16) {
+        while (opModeIsActive() && runtime.seconds() <17.4) {
             //Needs +.7
             br1.setPosition(.5);
             br2.setPosition(.5);
             ur1.setPosition(.5);
             ur2.setPosition(.5);
         }
-        while (opModeIsActive() && runtime.seconds() <17) {
+        while (opModeIsActive() && runtime.seconds() <18.4) {
             // +1
             ur2.setPosition(.4);
-            br3.setPosition(.44);
+            br3.setPosition(0.52);
         }
-        while (opModeIsActive() && runtime.seconds() < 18) {
+        while (opModeIsActive() && runtime.seconds() < 19.4) {
             //+1
             ur2.setPosition(.5);
             br3.setPosition(0.85);
         }
-        while (opModeIsActive() && runtime.seconds() <19.8) {
+        while (opModeIsActive() && runtime.seconds() <21.2) {
             //+1.8
             br1.setPosition(.1);
             br2.setPosition(.1);
             ur1.setPosition(.1);
             ur2.setPosition(.1);
         }
-        while (opModeIsActive() && runtime.seconds() <20) {
+        while (opModeIsActive() && runtime.seconds() <21.4) {
             //+.2
             br1.setPosition(.5);
             br2.setPosition(.5);
             ur1.setPosition(.5);
             ur2.setPosition(.5);
         }
-        while (opModeIsActive() && runtime.seconds() <21) {
+        while (opModeIsActive() && runtime.seconds() <22.4) {
             //+1
             ur2.setPosition(.1);
-            br3.setPosition(.44);
+            br3.setPosition(0.52);
         }
-        while (opModeIsActive() && runtime.seconds() < 22) {
+        while (opModeIsActive() && runtime.seconds() < 23.4) {
             //+1
             ur2.setPosition(.5);
             br3.setPosition(0.85);
         }
-        while (opModeIsActive() && runtime.seconds() <23.8) {
+        while (opModeIsActive() && runtime.seconds() <25.2) {
             //+1.8
             br1.setPosition(.1);
             br2.setPosition(.1);
             ur1.setPosition(.1);
             ur2.setPosition(.1);
         }
-        while (opModeIsActive() && runtime.seconds() <24) {
+        while (opModeIsActive() && runtime.seconds() <25.4) {
             //+.2
             br1.setPosition(.5);
             br2.setPosition(.5);
             ur1.setPosition(.5);
             ur2.setPosition(.5);
         }
-        while (opModeIsActive() && runtime.seconds() <25) {
+        while (opModeIsActive() && runtime.seconds() <26.4) {
             //+1
-            br3.setPosition(.44);
+            br3.setPosition(0.52);
             ur2.setPosition(.1);
         }
-        while (opModeIsActive() && runtime.seconds() < 26) {
+        while (opModeIsActive() && runtime.seconds() < 27.4) {
             //+1
             br3.setPosition(0.85);
             ur2.setPosition(.5);
