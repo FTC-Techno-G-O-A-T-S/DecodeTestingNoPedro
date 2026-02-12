@@ -32,9 +32,6 @@ package org.firstinspires.ftc.teamcode;
 import static com.qualcomm.robotcore.util.Range.clip;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -46,7 +43,6 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.controller.PController;
 import com.seattlesolvers.solverslib.controller.PIDFController;
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 
