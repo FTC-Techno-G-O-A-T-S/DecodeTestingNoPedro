@@ -222,6 +222,8 @@ public class teleop extends LinearOpMode {
             double target = 0; //ticks per sec
             if (gamepad2.right_trigger > 0.4) {
                 target = 1200;
+            } else if (gamepad2.right_bumper) {
+                target = 1500;
             }
             double velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
             double speed = Math.abs(velocity);
