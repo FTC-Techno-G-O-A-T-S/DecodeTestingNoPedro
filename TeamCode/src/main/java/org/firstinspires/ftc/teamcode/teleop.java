@@ -41,9 +41,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.seattlesolvers.solverslib.controller.PController;
 import com.seattlesolvers.solverslib.controller.PIDFController;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 
 /*
@@ -64,7 +62,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  *
  * 1) Axial:    Driving forward and backward               Left-joystick Forward/Backward
  * 2) Lateral:  Strafing right and left                     Left-joystick Right and Left
- * 3) Yaw:      Rotating Clockwise and counter clockwise    Right-joystick Right and Left
+ * 3) Yaw:      Rotating Clockwise and counterclockwise    Right-joystick Right and Left
  *
  * This code is written assuming that the right-side motors need to be reversed for the robot to drive forward.
  * When you first test your robot, if it moves backward when you push the left stick forward, then you must flip
@@ -79,7 +77,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class teleop extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
-    private ElapsedTime runtime = new ElapsedTime();
+    private final ElapsedTime runtime = new ElapsedTime();
     private DcMotor fl = null;
     private DcMotor bl = null;
     private DcMotor fr = null;
@@ -93,18 +91,7 @@ public class teleop extends LinearOpMode {
     private ServoImplEx br2 = null;
     private ServoImplEx br3 = null;
     private Servo light = null;
-    //private org.firstinspires.ftc.teamcode.PIDFController PIDFController;
-    //public static double kP = 0;
-    //public static double kI = 0;
-    //public static double kD = 0;
-    //public static double kF = 0;
-    //PIDFController pidf = new PIDFController();
-    //public static double output = 0;
-    //public static double velocity = 0;
-    //public static double setpoint = 0;
     public static double out = 0;
-
-
 
 
     @Override
@@ -159,7 +146,6 @@ public class teleop extends LinearOpMode {
 
         waitForStart();
         runtime.reset();
-        //hood.setPosition(1);
 
 
         // run until the end of the match (driver presses STOP)
@@ -208,7 +194,6 @@ public class teleop extends LinearOpMode {
                 intake.setPower(0);
             }
 
-            //outtake 2050 is good shoot
             /*if (gamepad2.dpad_right) {
                 outtake.setPower(0.86);
             } if (gamepad2.right_trigger > 0.4) {
@@ -226,8 +211,8 @@ public class teleop extends LinearOpMode {
                 target = 1500;
             }
             double velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
-            double speed = Math.abs(velocity);
-            speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
+            //double speed = Math.abs(velocity);
+            double speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
             outtake.setVelocity(speed);
 
 
@@ -282,7 +267,7 @@ public class teleop extends LinearOpMode {
                 backRightPower  /= max;
             }
 
-            // This is test code:
+            // This is testing code:
             //
             // Uncomment the following code to test your motor directions.
             // Each button should make the corresponding motor run FORWARD.
@@ -313,9 +298,10 @@ public class teleop extends LinearOpMode {
             telemetry.addData("outtake power", outtake.getPower());
             telemetry.addData("target", target);
             //telemetry.addData("output", velocity);
-            telemetry.addData("left deadwheel", fl.getCurrentPosition());
-            telemetry.addData("right deadwheel", br.getCurrentPosition());
-            telemetry.addData("strafe deadwheel", bl.getCurrentPosition());
+            telemetry.addData("left dead wheel", fl.getCurrentPosition());
+            telemetry.addData("right dead wheel", br.getCurrentPosition());
+            telemetry.addData("strafe dead wheel", bl.getCurrentPosition());
             telemetry.update();
         }
-    }}
+    }
+}
