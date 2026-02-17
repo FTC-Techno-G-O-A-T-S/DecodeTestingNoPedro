@@ -94,6 +94,8 @@ public class teleop extends LinearOpMode {
     private Servo light = null;
     public static double out = 0;
 
+    public static double target = 0; //ticks
+
     public static double P = 1.9;
     public static double I = 0.001;
     public static double D = 0.27;
@@ -143,7 +145,7 @@ public class teleop extends LinearOpMode {
         ur1.setDirection(Servo.Direction.REVERSE);
         ur2.setDirection(Servo.Direction.REVERSE);
 
-        PIDFController outtakePIDF = new PIDFController( 1.9,0.001,0.27,0.7);//tuned 12-11-25
+        PIDFController outtakePIDF = new PIDFController(P,I,D,F);//tuned 12-11-25
         //PIDFController outtakePIDF = new PIDFController( 0.8,0,0.9,0.7);//sart tune 1/30/26
 
 
@@ -211,7 +213,7 @@ public class teleop extends LinearOpMode {
                 outtake.setVelocity(0);
             }*/
 
-            double target = 0; //ticks per sec
+
             if (gamepad2.right_trigger > 0.4) {
                 target = 1200;
             } else if (gamepad2.right_bumper) {
@@ -302,8 +304,9 @@ public class teleop extends LinearOpMode {
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", frontLeftPower, frontRightPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", backLeftPower, backRightPower);
             telemetry.addData("outtake velocity", outtake.getVelocity());
-            telemetry.addData("outtake power", outtake.getPower());
+            //telemetry.addData("outtake power", outtake.getPower());
             telemetry.addData("target", target);
+            telemetry.addData("pidf output", speed);
             //telemetry.addData("output", velocity);
             telemetry.addData("left dead wheel", fl.getCurrentPosition());
             telemetry.addData("right dead wheel", br.getCurrentPosition());
