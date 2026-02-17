@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import static com.qualcomm.robotcore.util.Range.clip;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -73,7 +74,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
-//@Config
+@Config
 @TeleOp(name="teleop", group="Linear OpMode")
 //@Disabled
 public class teleop extends LinearOpMode {
@@ -103,6 +104,12 @@ public class teleop extends LinearOpMode {
     //public static double velocity = 0;
     //public static double setpoint = 0;
     public static double out = 0;
+
+    public static double P = 1.9;
+    public static double I = 0.001;
+    public static double D = 0.27;
+    public static double F = 0.7;
+
 
 
 
