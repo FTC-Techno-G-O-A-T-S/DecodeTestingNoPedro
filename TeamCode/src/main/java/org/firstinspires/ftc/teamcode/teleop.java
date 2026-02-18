@@ -307,7 +307,6 @@ public class teleop extends LinearOpMode {
             //telemetry.addData("outtake power", outtake.getPower());
             telemetry.addData("target", target);
             telemetry.addData("pidf output", speed);
-            //telemetry.addData("output", velocity);
             telemetry.addData("left dead wheel", fl.getCurrentPosition());
             telemetry.addData("right dead wheel", br.getCurrentPosition());
             telemetry.addData("strafe dead wheel", bl.getCurrentPosition());
