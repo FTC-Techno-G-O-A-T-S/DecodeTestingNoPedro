@@ -96,10 +96,12 @@ public class teleop extends LinearOpMode {
 
     public static double target = 0; //ticks
 
-    public static double P = 1.9;
-    public static double I = 0.001;
-    public static double D = 0.27;
+    public static double P = 0.0002;
+    public static double I = 0;
+    public static double D = 0.00005;
     public static double F = 0.7;
+    public static double angle = 0;
+    public static double outtakepow = 0;
 
 
 
@@ -145,9 +147,10 @@ public class teleop extends LinearOpMode {
         ur1.setDirection(Servo.Direction.REVERSE);
         ur2.setDirection(Servo.Direction.REVERSE);
 
-        PIDFController outtakePIDF = new PIDFController(P,I,D,F);//tuned 12-11-25
+        PIDFController outtakePIDF = new PIDFController(P,I,D,F);//tuned 12-11-25 p= 1.9 i=0.001 d=0.27 f=0.7
+        //PIDFController outtakePIDF = new PIDFController(.5,0,.1,.2);//tuned 2-25-26 p= 1.9 i=0.001 d=0.27 f=0.7
         //PIDFController outtakePIDF = new PIDFController( 0.8,0,0.9,0.7);//sart tune 1/30/26
-
+        target=0;
 
         // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Initialized");
@@ -160,12 +163,15 @@ public class teleop extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
 
         while (opModeIsActive()) {
-
+            hood.setPosition(angle);
+            outtake.setPower(outtakepow);
             //hood
             if (gamepad2.triangle){
-                hood.setPosition(0.75);
+                angle = 0.67;
+                //hood.setPosition(0);
             } else{
-                hood.setPosition(.95);
+                //\\hood.setPosition(0.75);
+                angle = 0.7;
             }
             //ramp
             if (gamepad2.square) {
@@ -188,17 +194,19 @@ public class teleop extends LinearOpMode {
             if(gamepad2.a){
                 br3.setPosition(0.52);
                 //ur1.setPosition(0.1);
-                //ur2.setPosition(0.1);
+                ur2.setPosition(0.1);
             } else{
                 br3.setPosition(0.85);
-                //ur1.setPosition(0.5);
-                //ur2.setPosition(0.5);
             }
             //intake
             if (gamepad2.left_trigger > 0.4) {
                 intake.setVelocity(2000); //in ticks
+                br1.setPosition(0.1);
+                ur1.setPosition(0.1);
             } else if (gamepad2.left_bumper){
                 intake.setVelocity(-2000);
+                br1.setPosition(1);
+                ur1.setPosition(1);
             } else {
                 intake.setPower(0);
             }
@@ -215,9 +223,12 @@ public class teleop extends LinearOpMode {
 
 
             if (gamepad2.right_trigger > 0.4) {
-                target = 1200;
+                target = 1600;
             } else if (gamepad2.right_bumper) {
-                target = 1500;
+                outtake.setVelocity(-2400);            }
+            else{
+                target = 0;
+                outtake.setVelocity(0);
             }
             double velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
             //double speed = Math.abs(velocity);
