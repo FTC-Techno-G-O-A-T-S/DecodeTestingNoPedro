@@ -96,9 +96,9 @@ public class teleop extends LinearOpMode {
 
     public static double target = 0; //ticks
 
-    public static double P = 0.0002;
-    public static double I = 0;
-    public static double D = 0.00005;
+    public static double P = 1.904;
+    public static double I = 0.001;
+    public static double D = 0.27;
     public static double F = 0.7;
     public static double angle = 0;
     public static double outtakepow = 0;
@@ -148,7 +148,7 @@ public class teleop extends LinearOpMode {
         ur2.setDirection(Servo.Direction.REVERSE);
 
         PIDFController outtakePIDF = new PIDFController(P,I,D,F);//tuned 12-11-25 p= 1.9 i=0.001 d=0.27 f=0.7
-        //PIDFController outtakePIDF = new PIDFController(.5,0,.1,.2);//tuned 2-25-26 p= 1.9 i=0.001 d=0.27 f=0.7
+        //bad testing p=0.0002 i=0 d=0.00005 f=.7
         //PIDFController outtakePIDF = new PIDFController( 0.8,0,0.9,0.7);//sart tune 1/30/26
         target=0;
 
@@ -223,17 +223,20 @@ public class teleop extends LinearOpMode {
 
 
             if (gamepad2.right_trigger > 0.4) {
-                target = 1600;
+                target = 700;
+                outtake.setVelocity(1000);
             } else if (gamepad2.right_bumper) {
                 outtake.setVelocity(-2400);            }
             else{
                 target = 0;
                 outtake.setVelocity(0);
             }
+
             double velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
             //double speed = Math.abs(velocity);
             double speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
             outtake.setVelocity(speed);
+
 
 
             if (outtake.getVelocity() > 1020) {
