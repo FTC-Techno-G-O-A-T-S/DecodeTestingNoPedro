@@ -157,7 +157,10 @@ public class autoBlue extends LinearOpMode {
         waitForStart();
         runtime.reset();
         //Auto Starts Here
-
+        //front left deadwheel = fl motor
+        //front right deadwheel = br motor
+        //strafe deadwheel = bl motor
+        /*
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("frontleft", fl.getCurrentPosition());
         telemetry.addData("frontright", fr.getCurrentPosition());
@@ -166,6 +169,7 @@ public class autoBlue extends LinearOpMode {
         telemetry.addData("frontright inches", encoderTicksToInches(fr.getCurrentPosition()));
         telemetry.addData("backleft inches", encoderTicksToInches(bl.getCurrentPosition()));
         telemetry.update();
+         */
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
         br1.setPosition(0.5);
         br2.setPosition(0.5);
@@ -179,12 +183,17 @@ public class autoBlue extends LinearOpMode {
         outtake.setVelocity(speed);
 
 
-        //Move forward 40 inches
+        //Move forward tp shoot pos
         while(encoderTicksToInches(br.getCurrentPosition())<50&&opModeIsActive()) {
             fl.setPower(.3);
             fr.setPower(.3);
             br.setPower(.3);
             bl.setPower(.3);
+            telemetry.addData("frontleft inches", encoderTicksToInches(fl.getCurrentPosition()));
+            telemetry.addLine("the good ones");
+            telemetry.addData("frontright inches", encoderTicksToInches(br.getCurrentPosition()));
+            telemetry.addData("strafe inches", encoderTicksToInches(bl.getCurrentPosition()));
+            telemetry.update();
         }
         fl.setPower(0);
         fr.setPower(0);
@@ -201,6 +210,11 @@ public class autoBlue extends LinearOpMode {
             fr.setPower(.3);
             br.setPower(-.3);
             bl.setPower(.3);
+            telemetry.addData("frontleft inches", encoderTicksToInches(fl.getCurrentPosition()));
+            telemetry.addLine("the good ones");
+            telemetry.addData("frontright inches", encoderTicksToInches(br.getCurrentPosition()));
+            telemetry.addData("strafe inches", encoderTicksToInches(bl.getCurrentPosition()));
+            telemetry.update();
         }
         fl.setPower(0);
         fr.setPower(0);
@@ -213,6 +227,11 @@ public class autoBlue extends LinearOpMode {
             fr.setPower(-.3);
             br.setPower(-.3);
             bl.setPower(.3);
+            telemetry.addData("frontleft inches", encoderTicksToInches(fl.getCurrentPosition()));
+            telemetry.addLine("the good ones");
+            telemetry.addData("frontright inches", encoderTicksToInches(br.getCurrentPosition()));
+            telemetry.addData("strafe inches", encoderTicksToInches(bl.getCurrentPosition()));
+            telemetry.update();
         }
         fl.setPower(0);
         fr.setPower(0);
@@ -225,12 +244,17 @@ public class autoBlue extends LinearOpMode {
             fr.setPower(.3);
             br.setPower(.3);
             bl.setPower(.3);
+            telemetry.addData("frontleft inches", encoderTicksToInches(fl.getCurrentPosition()));
+            telemetry.addLine("the good ones");
+            telemetry.addData("frontright inches", encoderTicksToInches(br.getCurrentPosition()));
+            telemetry.addData("strafe inches", encoderTicksToInches(bl.getCurrentPosition()));
+            telemetry.update();
         }
         fl.setPower(0);
         fr.setPower(0);
         br.setPower(0);
         bl.setPower(0);
-
+/*
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("Yaw (Z)", "%.2f Deg. (Heading)", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
         telemetry.addData("encoder ticks (BL)", encoderTicksToInches(br.getCurrentPosition()));
@@ -245,6 +269,8 @@ public class autoBlue extends LinearOpMode {
         telemetry.addData("frontright", encoderTicksToInches(fr.getCurrentPosition()));
         telemetry.addData("backleft", encoderTicksToInches(bl.getCurrentPosition()));
         telemetry.update();
+
+ */
             runtime.reset();
     }
 }
