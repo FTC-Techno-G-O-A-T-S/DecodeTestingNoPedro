@@ -96,9 +96,9 @@ public class teleop extends LinearOpMode {
 
     public static double target = 0; //ticks
 
-    public static double P = 1.904;
+    public static double P = 1.911;
     public static double I = 0.001;
-    public static double D = 0.27;
+    public static double D = 0.275;
     public static double F = 0.7;
     public static double angle = 0;
     public static double outtakepow = 0;
@@ -169,6 +169,8 @@ public class teleop extends LinearOpMode {
             if (gamepad2.triangle){
                 angle = 0.67;
                 //hood.setPosition(0);
+            } else if (gamepad2.dpad_up) {
+                angle = 0.62;
             } else{
                 //\\hood.setPosition(0.75);
                 angle = 0.7;
@@ -223,11 +225,14 @@ public class teleop extends LinearOpMode {
 
 
             if (gamepad2.right_trigger > 0.4) {
-                target = 700;
-                outtake.setVelocity(1000);
+                target = 1200;
             } else if (gamepad2.right_bumper) {
-                outtake.setVelocity(-2400);            }
-            else{
+                //outtake.setVelocity(-2400);
+                target = 1700;
+                angle = 0.67;
+            } else if (gamepad2.dpad_left) {
+                target = 1900;
+            } else{
                 target = 0;
                 outtake.setVelocity(0);
             }

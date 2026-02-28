@@ -1,21 +1,17 @@
 package org.firstinspires.ftc.teamcode;
 
-import static com.qualcomm.robotcore.util.Range.clip;
-
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+//import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.hardware.IMU;
-import com.seattlesolvers.solverslib.controller.PIDFController;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
-import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
+//import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 /* Copyright (c) 2021 FIRST. All rights reserved.
  *
@@ -74,7 +70,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 @Autonomous
-public class autoBlue extends LinearOpMode {
+@Disabled
+public class autoBlue_runtime extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
@@ -90,8 +87,11 @@ public class autoBlue extends LinearOpMode {
     private  ServoImplEx br1 = null;
     private ServoImplEx br2 = null;
     private ServoImplEx br3 = null;
-    public static double target = 0; //ticks
-    IMU imu;
+    //IMU imu;
+    //int three = 2;
+    //double lastbl;
+    //double lastfl;
+    //double lastbr;
     public static double TICKS_PER_REV = 2000;
     public static double WHEEL_RADIUS = 0.6299212598; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
@@ -102,6 +102,7 @@ public class autoBlue extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        telemetry.addData("Status", "Initialized");
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
         fl = hardwareMap.get(DcMotor.class, "fl");
@@ -116,15 +117,14 @@ public class autoBlue extends LinearOpMode {
         br1 = hardwareMap.get(ServoImplEx.class, "br1");
         br2 = hardwareMap.get(ServoImplEx.class, "br2");
         br3 = hardwareMap.get(ServoImplEx.class,"br3");
-        imu = hardwareMap.get(IMU.class, "imu");
-
-        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
-        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD;
-        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
-        // Now initialize the IMU with this mounting orientation
-        // Note: if you choose two conflicting directions, this initialization will cause a code exception.
-        imu.initialize(new IMU.Parameters(orientationOnRobot));
-
+        waitForStart();
+        telemetry.addData("frontleft", fl.getCurrentPosition());
+        telemetry.addData("frontright", fr.getCurrentPosition());
+        telemetry.addData("backleft", bl.getCurrentPosition());
+        telemetry.addData("frontleft", encoderTicksToInches(fl.getCurrentPosition()));
+        telemetry.addData("frontright", encoderTicksToInches(fr.getCurrentPosition()));
+        telemetry.addData("backleft", encoderTicksToInches(bl.getCurrentPosition()));
+        telemetry.update();
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -137,9 +137,9 @@ public class autoBlue extends LinearOpMode {
         // Reverse the direction (flip FORWARD <-> REVERSE ) of any wheel that runs backward
         // Keep testing until ALL the wheels move the robot forward when you push the left joystick forward.
         fl.setDirection(DcMotor.Direction.FORWARD);
-        bl.setDirection(DcMotor.Direction.FORWARD);
+        bl.setDirection(DcMotor.Direction.REVERSE);
         fr.setDirection(DcMotor.Direction.REVERSE);
-        br.setDirection(DcMotor.Direction.REVERSE);
+        br.setDirection(DcMotor.Direction.FORWARD);
         outtake.setDirection(DcMotor.Direction.REVERSE);
         intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -148,103 +148,126 @@ public class autoBlue extends LinearOpMode {
         hood.setDirection(Servo.Direction.FORWARD);
         ur1.setDirection(Servo.Direction.REVERSE);
         ur2.setDirection(Servo.Direction.REVERSE);
-        PIDFController outtakePIDF = new PIDFController(1.911,.001,.275,.7);//tuned 12-11-25 p= 1.9 i=0.001 d=0.27 f=0.7
 
+
+        // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        // Wait for the game to start (driver presses START)
         waitForStart();
         runtime.reset();
-        //Auto Starts Here
+        //hood.setPosition(1);
+
+        telemetry.addData("outtake", outtake.getVelocity());
 
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("frontleft", fl.getCurrentPosition());
-        telemetry.addData("frontright", fr.getCurrentPosition());
-        telemetry.addData("backleft", bl.getCurrentPosition());
-        telemetry.addData("frontleft inches", encoderTicksToInches(fl.getCurrentPosition()));
-        telemetry.addData("frontright inches", encoderTicksToInches(fr.getCurrentPosition()));
-        telemetry.addData("backleft inches", encoderTicksToInches(bl.getCurrentPosition()));
+        //telemetry.addData("Front left/Right", "%4.2f, %4.2f", flPower, frPower);
+        //telemetry.addData("Back  left/Right", "%4.2f, %4.2f", blPower, brPower);
         telemetry.update();
-        YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
         br1.setPosition(0.5);
         br2.setPosition(0.5);
         ur1.setPosition(0.5);
         ur2.setPosition(0.5);
         br3.setPosition(0.85);
-        target = 1200;
-        hood.setPosition(.7);
-        double velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
-        double speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
-        outtake.setVelocity(speed);
-
-
-        //Move forward 40 inches
-        while(encoderTicksToInches(br.getCurrentPosition())<50&&opModeIsActive()) {
-            fl.setPower(.3);
-            fr.setPower(.3);
-            br.setPower(.3);
-            bl.setPower(.3);
+        outtake.setVelocity(1000);
+        hood.setPosition(.95);
+        while (opModeIsActive() && runtime.seconds() < .85) {
+            fl.setPower(.25);
+            fr.setPower(.25);
+            bl.setPower(-.25);
+            br.setPower(-.25);
         }
-        fl.setPower(0);
-        fr.setPower(0);
-        br.setPower(0);
-        bl.setPower(0);
-
-
-        //Shooting code
-        //need to add
-
-        //Turn to line up for spike
-        while(imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)<135&&opModeIsActive()){
-            fl.setPower(-.3);
-            fr.setPower(.3);
-            br.setPower(-.3);
-            bl.setPower(.3);
+        while (opModeIsActive() && runtime.seconds() < 10) {
+            fl.setPower(0);
+            fr.setPower(0);
+            bl.setPower(0);
+            br.setPower(0);
         }
-        fl.setPower(0);
-        fr.setPower(0);
-        br.setPower(0);
-        bl.setPower(0);
-
-        //Move strafe to line up with spike
-        while(encoderTicksToInches(br.getCurrentPosition())<12&&opModeIsActive()) {
-            fl.setPower(.3);
-            fr.setPower(-.3);
-            br.setPower(-.3);
-            bl.setPower(.3);
+        while (opModeIsActive() && runtime.seconds() <10.3) {
+            //Needs +.3 Seconds
+            br1.setPosition(.1);
+            br2.setPosition(.1);
+            ur1.setPosition(.1);
+            ur2.setPosition(.1);
         }
-        fl.setPower(0);
-        fr.setPower(0);
-        br.setPower(0);
-        bl.setPower(0);
-
-        //Move to intake from spike
-        while(encoderTicksToInches(br.getCurrentPosition())<50&&opModeIsActive()) {
-            fl.setPower(.3);
-            fr.setPower(.3);
-            br.setPower(.3);
-            bl.setPower(.3);
+        while (opModeIsActive() && runtime.seconds() <11) {
+            //Needs +.7
+            br1.setPosition(.5);
+            br2.setPosition(.5);
+            ur1.setPosition(.5);
+            ur2.setPosition(.5);
         }
-        fl.setPower(0);
-        fr.setPower(0);
-        br.setPower(0);
-        bl.setPower(0);
+        while (opModeIsActive() && runtime.seconds() <12) {
+            // +1
+            ur2.setPosition(.4);
+            br3.setPosition(.44);
+        }
+        while (opModeIsActive() && runtime.seconds() < 13) {
+            //+1
+            ur2.setPosition(.5);
+            br3.setPosition(0.85);
+        }
+        while (opModeIsActive() && runtime.seconds() <14.8) {
+            //+1.8
+            br1.setPosition(.1);
+            br2.setPosition(.1);
+            ur1.setPosition(.1);
+            ur2.setPosition(.1);
+        }
+        while (opModeIsActive() && runtime.seconds() <15) {
+            //+.2
+            br1.setPosition(.5);
+            br2.setPosition(.5);
+            ur1.setPosition(.5);
+            ur2.setPosition(.5);
+        }
+        while (opModeIsActive() && runtime.seconds() <16) {
+            //+1
+            ur2.setPosition(.1);
+            br3.setPosition(.44);
+        }
+        while (opModeIsActive() && runtime.seconds() < 17) {
+            //+1
+            ur2.setPosition(.5);
+            br3.setPosition(0.85);
+        }
+        while (opModeIsActive() && runtime.seconds() <17.8) {
+            //+1.8
+            br1.setPosition(.1);
+            br2.setPosition(.1);
+            ur1.setPosition(.1);
+            ur2.setPosition(.1);
+        }
+        while (opModeIsActive() && runtime.seconds() <18) {
+            //+.2
+            br1.setPosition(.5);
+            br2.setPosition(.5);
+            ur1.setPosition(.5);
+            ur2.setPosition(.5);
+        }
+        while (opModeIsActive() && runtime.seconds() <19) {
+            //+1
+            br3.setPosition(.44);
+            ur2.setPosition(.1);
+            br1.setPosition(.1);
+            br2.setPosition(.1);
+            ur1.setPosition(.1);
+            ur2.setPosition(.1);
+        }
+        while (opModeIsActive() && runtime.seconds() < 20) {
+            //+1
+            br3.setPosition(0.85);
+            ur2.setPosition(.5);
+        }
 
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("Yaw (Z)", "%.2f Deg. (Heading)", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
-        telemetry.addData("encoder ticks (BL)", encoderTicksToInches(br.getCurrentPosition()));
-        telemetry.addData("encoder ticks (FR)", encoderTicksToInches(fr.getCurrentPosition()));
-        telemetry.addData("encoder ticks (FL)", encoderTicksToInches(fl.getCurrentPosition()));
+
         telemetry.addData("outtake velocity", outtake.getVelocity());
-
-        telemetry.addData("frontleft", fl.getCurrentPosition());
-        telemetry.addData("frontright", fr.getCurrentPosition());
-        telemetry.addData("backleft", bl.getCurrentPosition());
-        telemetry.addData("frontleft", encoderTicksToInches(fl.getCurrentPosition()));
-        telemetry.addData("frontright", encoderTicksToInches(fr.getCurrentPosition()));
-        telemetry.addData("backleft", encoderTicksToInches(bl.getCurrentPosition()));
         telemetry.update();
-            runtime.reset();
+        runtime.reset();
     }
+
+
+
+
 }
+
