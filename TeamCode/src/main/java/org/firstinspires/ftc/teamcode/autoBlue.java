@@ -220,44 +220,31 @@ public class autoBlue extends LinearOpMode {
             fr.setPower(.3);
             br.setPower(-.3);
             bl.setPower(.3);
-            telemetry.addData("frontleft inches", encoderTicksToInches(fl.getCurrentPosition()));
-            telemetry.addLine("the good ones");
-            telemetry.addData("frontright inches", encoderTicksToInches(br.getCurrentPosition()));
-            telemetry.addData("strafe inches", encoderTicksToInches(bl.getCurrentPosition()));
-            telemetry.addData("imu", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
-            telemetry.update();
+            telemetryGroup();
             bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
         //Move strafe to line up with spike
-        while(encoderTicksToInches(bl.getCurrentPosition())<15&&opModeIsActive()) {
+        while(encoderTicksToInches(bl.getCurrentPosition())<7&&opModeIsActive()) {
             fl.setPower(.3);
             fr.setPower(-.3);
             br.setPower(-.3);
             bl.setPower(.3);
-            telemetry.addData("frontleft inches", encoderTicksToInches(fl.getCurrentPosition()));
-            telemetry.addLine("the good ones");
-            telemetry.addData("frontright inches", encoderTicksToInches(br.getCurrentPosition()));
-            telemetry.addData("strafe inches", encoderTicksToInches(bl.getCurrentPosition()));
-            telemetry.addData("imu", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
-            telemetry.update();
+            telemetryGroup();
             br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
         //Move to intake from spike
-        while(encoderTicksToInches(br.getCurrentPosition())<50&&opModeIsActive()) {
+        while(encoderTicksToInches(br.getCurrentPosition())<35&&opModeIsActive()) {
             fl.setPower(.3);
             fr.setPower(.3);
             br.setPower(.3);
             bl.setPower(.3);
-            telemetry.addData("frontleft inches", encoderTicksToInches(fl.getCurrentPosition()));
-            telemetry.addLine("the good ones");
-            telemetry.addData("frontright inches", encoderTicksToInches(br.getCurrentPosition()));
-            telemetry.addData("strafe inches", encoderTicksToInches(bl.getCurrentPosition()));
-            telemetry.addData("imu", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
-            telemetry.update();
+            //make intake and ball path run
+            telemetryGroup();
         }
+        //end in front of ramp over spike mark
     }
 }
