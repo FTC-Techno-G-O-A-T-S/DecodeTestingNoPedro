@@ -168,11 +168,9 @@ public class teleop extends LinearOpMode {
             //hood
             if (gamepad2.triangle){
                 angle = 0.67;
-                //hood.setPosition(0);
             } else if (gamepad2.dpad_up) {
-                angle = 0.62;
+                angle = 0.67;
             } else{
-                //\\hood.setPosition(0.75);
                 angle = 0.7;
             }
             //ramp
@@ -193,9 +191,8 @@ public class teleop extends LinearOpMode {
                 br2.setPosition(0.5);
             }
             //kicker
-            if(gamepad2.a){
+            if(gamepad2.a && outtake.getVelocity() > 1040 ){
                 br3.setPosition(0.52);
-                //ur1.setPosition(0.1);
                 ur2.setPosition(0.1);
             } else{
                 br3.setPosition(0.85);
@@ -244,10 +241,10 @@ public class teleop extends LinearOpMode {
 
 
 
-            if (outtake.getVelocity() > 1020) {
+            if (outtake.getVelocity() > 1080 && outtake.getVelocity() < 1160) {
                 light.setPosition(0.5);
-            } else if (outtake.getVelocity() <1020) {
-                light.setPosition(0.277);
+            } else if (outtake.getVelocity() < 1040) {
+                light.setPosition(0.3);
             }
 
             TelemetryPacket packet = new TelemetryPacket();
