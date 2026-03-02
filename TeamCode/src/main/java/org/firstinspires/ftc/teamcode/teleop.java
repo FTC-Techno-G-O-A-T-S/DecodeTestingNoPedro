@@ -96,9 +96,9 @@ public class teleop extends LinearOpMode {
 
     public static double target = 0; //ticks
 
-    public static double P = 1.911;
-    public static double I = 0.001;
-    public static double D = 0.275;
+    public static double P = 1.914;
+    public static double I = 0.0011;
+    public static double D = 0.277;
     public static double F = 0.7;
     public static double angle = 0;
     public static double outtakepow = 0;
@@ -246,7 +246,7 @@ public class teleop extends LinearOpMode {
 
             if (outtake.getVelocity() > 1020) {
                 light.setPosition(0.5);
-            } else if (outtake.getVelocity() < 900) {
+            } else if (outtake.getVelocity() <1020) {
                 light.setPosition(0.277);
             }
 

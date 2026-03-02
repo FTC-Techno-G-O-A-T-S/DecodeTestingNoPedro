@@ -242,9 +242,48 @@ public class autoBlue extends LinearOpMode {
             fr.setPower(.3);
             br.setPower(.3);
             bl.setPower(.3);
-            //make intake and ball path run
+            br1.setPosition(.1);
+            br2.setPosition(.1);
+            ur1.setPosition(.1);
+            ur2.setPosition(.1);
             telemetryGroup();
+            br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
-        //end in front of ramp over spike mark
+
+        //drive backward to line
+        while(encoderTicksToInches(br.getCurrentPosition())<35&&opModeIsActive()) {
+            fl.setPower(-.3);
+            fr.setPower(-.3);
+            br.setPower(-.3);
+            bl.setPower(-.3);
+            br1.setPosition(.5);
+            br2.setPosition(.5);
+            ur1.setPosition(.5);
+            ur2.setPosition(.5);
+            telemetryGroup();
+            br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+        //strafe to shoot line
+        while(encoderTicksToInches(bl.getCurrentPosition())<7&&opModeIsActive()) {
+            fl.setPower(-.3);
+            fr.setPower(.3);
+            br.setPower(.3);
+            bl.setPower(-.3);
+            telemetryGroup();
+            br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+        //turn to shootpos
+        while(imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)<135&&opModeIsActive()){
+            fl.setPower(.3);
+            fr.setPower(-.3);
+            br.setPower(.3);
+            bl.setPower(-.3);
+            telemetryGroup();
+            bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
     }
 }
