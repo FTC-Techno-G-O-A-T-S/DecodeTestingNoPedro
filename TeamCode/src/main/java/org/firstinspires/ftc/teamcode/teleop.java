@@ -96,12 +96,13 @@ public class teleop extends LinearOpMode {
 
     public static double target = 0; //ticks
 
-    public static double P = 1.914;
+    public static double P = 1.913819;
     public static double I = 0.0011;
-    public static double D = 0.277;
+    public static double D = 0.2773;
     public static double F = 0.7;
     public static double angle = 0;
     public static double outtakepow = 0;
+    public static boolean green = false;
 
 
 
@@ -191,7 +192,7 @@ public class teleop extends LinearOpMode {
                 br2.setPosition(0.5);
             }
             //kicker
-            if(gamepad2.a && outtake.getVelocity() > 1040 ){
+            if(gamepad2.a && green == true){
                 br3.setPosition(0.52);
                 ur2.setPosition(0.1);
             } else{
@@ -222,7 +223,7 @@ public class teleop extends LinearOpMode {
 
 
             if (gamepad2.right_trigger > 0.4) {
-                target = 1200;
+                target = 1220;
             } else if (gamepad2.right_bumper) {
                 //outtake.setVelocity(-2400);
                 target = 1700;
@@ -243,13 +244,16 @@ public class teleop extends LinearOpMode {
 
             if (outtake.getVelocity() > 1080 && outtake.getVelocity() < 1160) {
                 light.setPosition(0.5);
+                green = true;
             } else if (outtake.getVelocity() < 1040) {
                 light.setPosition(0.3);
+                green = false;
             }
 
             TelemetryPacket packet = new TelemetryPacket();
             packet.put("outtake velocity", outtake.getVelocity());
             packet.put("status", "alive");
+            packet.put("shoot good?", green);
             FtcDashboard dashboard = FtcDashboard.getInstance();
             dashboard.sendTelemetryPacket(packet);
 
