@@ -92,6 +92,7 @@ public class teleop extends LinearOpMode {
     private ServoImplEx br2 = null;
     private ServoImplEx br3 = null;
     private Servo light = null;
+    private Servo gate = null;
     public static double out = 0;
 
     public static double target = 0; //ticks
@@ -123,6 +124,7 @@ public class teleop extends LinearOpMode {
         br2 = hardwareMap.get(ServoImplEx.class, "br2");
         br3 = hardwareMap.get(ServoImplEx.class,"br3");
         light = hardwareMap.get(Servo.class, "light");
+        gate = hardwareMap.get(Servo.class, "gate");
 
 
         // ########################################################################################
@@ -192,7 +194,7 @@ public class teleop extends LinearOpMode {
                 br2.setPosition(0.5);
             }
             //kicker
-            if(gamepad2.a && green == true){
+            if(gamepad2.a ){
                 br3.setPosition(0.52);
                 ur2.setPosition(0.1);
             } else{
@@ -209,6 +211,12 @@ public class teleop extends LinearOpMode {
                 ur1.setPosition(1);
             } else {
                 intake.setPower(0);
+            }
+            //ball path gate
+            if (gamepad2.dpad_right) {
+                gate.setPosition(.1);
+            } else {
+                gate.setPosition(0.2);
             }
 
             /*if (gamepad2.dpad_right) {
