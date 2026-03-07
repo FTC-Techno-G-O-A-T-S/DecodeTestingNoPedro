@@ -104,6 +104,7 @@ public class teleop extends LinearOpMode {
     public static double angle = 0;
     public static double outtakepow = 0;
     public static boolean green = false;
+    public static boolean open = false;
 
 
 
@@ -172,8 +173,12 @@ public class teleop extends LinearOpMode {
                 angle = 0.67;
             } else if (gamepad2.dpad_up) {
                 angle = 0.67;
+                gate.setPosition(0.16);
+                open = true;
             } else{
                 angle = 0.7;
+                gate.setPosition(0.08);
+                open = false;
             }
             //ramp
             if (gamepad2.square) {
@@ -193,7 +198,7 @@ public class teleop extends LinearOpMode {
                 br2.setPosition(0.5);
             }
             //kicker
-            if(gamepad2.a){
+            if(gamepad2.a && open == true){
                 br3.setPosition(0.52);
                 ur2.setPosition(0.1);
             } else{
@@ -212,11 +217,11 @@ public class teleop extends LinearOpMode {
                 intake.setPower(0);
             }
             //ball path gate
-            if (gamepad2.dpad_right) {
-                gate.setPosition(.1);
-            } else {
+            /*if (gamepad2.dpad_right) {
                 gate.setPosition(0.2);
-            }
+            } else {
+                gate.setPosition(0.1);
+            }*/
 
             /*if (gamepad2.dpad_right) {
                 outtake.setPower(0.86);
@@ -273,11 +278,15 @@ public class teleop extends LinearOpMode {
             double axial;   //= -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
             double lateral; //=  gamepad1.left_stick_x;
             double yaw;     //=  gamepad1.right_stick_x;
-            if(gamepad1.right_trigger > 0.4) {
+            if(gamepad1.right_trigger > 0.2) {
                 axial = -gamepad1.left_stick_y * 1;
                 yaw = gamepad1.left_stick_x * 1;
-                lateral = gamepad1.right_stick_x * 0.40;
-            } else {
+                lateral = gamepad1.right_stick_x * 0.25;
+            } if(gamepad1.right_bumper) {
+                axial = -gamepad1.left_stick_y * 1;
+                yaw = gamepad1.left_stick_x * 1;
+                lateral = gamepad1.right_stick_x * 0.25;
+            }else {
                 axial= -gamepad1.left_stick_y;
                 yaw = gamepad1.left_stick_x;
                 lateral = gamepad1.right_stick_x;
