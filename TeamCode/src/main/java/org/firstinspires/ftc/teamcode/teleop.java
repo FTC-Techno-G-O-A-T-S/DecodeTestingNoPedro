@@ -150,9 +150,10 @@ public class teleop extends LinearOpMode {
         ur1.setDirection(Servo.Direction.REVERSE);
         ur2.setDirection(Servo.Direction.REVERSE);
 
-        PIDFController outtakePIDF = new PIDFController(P,I,D,F);//tuned 12-11-25 p= 1.9 i=0.001 d=0.27 f=0.7
+        PIDFController outtakePIDF = new PIDFController(P,I,D,F); //tuned 3/3/26
+        //tuned 12-11-25 p= 1.9 i=0.001 d=0.27 f=0.7
         //bad testing p=0.0002 i=0 d=0.00005 f=.7
-        //PIDFController outtakePIDF = new PIDFController( 0.8,0,0.9,0.7);//sart tune 1/30/26
+        //PIDFController outtakePIDF = new PIDFController( 0.8,0,0.9,0.7);//start tune 1/30/26
         target=0;
 
         // Wait for the game to start (driver presses START)
@@ -161,8 +162,6 @@ public class teleop extends LinearOpMode {
 
         waitForStart();
         runtime.reset();
-
-
         // run until the end of the match (driver presses STOP)
 
         while (opModeIsActive()) {
@@ -194,7 +193,7 @@ public class teleop extends LinearOpMode {
                 br2.setPosition(0.5);
             }
             //kicker
-            if(gamepad2.a ){
+            if(gamepad2.a){
                 br3.setPosition(0.52);
                 ur2.setPosition(0.1);
             } else{
@@ -335,9 +334,9 @@ public class teleop extends LinearOpMode {
             //telemetry.addData("outtake power", outtake.getPower());
             telemetry.addData("target", target);
             telemetry.addData("pidf output", speed);
-            telemetry.addData("left dead wheel", fl.getCurrentPosition());
-            telemetry.addData("right dead wheel", br.getCurrentPosition());
-            telemetry.addData("strafe dead wheel", bl.getCurrentPosition());
+            //telemetry.addData("left dead wheel", fl.getCurrentPosition());
+            //telemetry.addData("right dead wheel", br.getCurrentPosition());
+            //telemetry.addData("strafe dead wheel", bl.getCurrentPosition());
             telemetry.update();
         }
     }

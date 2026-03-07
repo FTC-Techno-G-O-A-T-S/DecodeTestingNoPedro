@@ -1,15 +1,21 @@
 package org.firstinspires.ftc.teamcode;
 
+import static com.qualcomm.robotcore.util.Range.clip;
+
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-//import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.IMU;
+import com.seattlesolvers.solverslib.controller.PIDFController;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
-//import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 /* Copyright (c) 2021 FIRST. All rights reserved.
  *
@@ -84,22 +90,32 @@ public class autoFar extends LinearOpMode {
     private  ServoImplEx br1 = null;
     private ServoImplEx br2 = null;
     private ServoImplEx br3 = null;
-    //IMU imu;
-    //int three = 2;
-    //double lastbl;
-    //double lastfl;
-    //double lastbr;
+    private ServoImplEx gate = null;
+    public static double target = 0; //ticks
+    IMU imu;
     public static double TICKS_PER_REV = 2000;
     public static double WHEEL_RADIUS = 0.6299212598; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
     public static double encoderTicksToInches(double ticks) {
         return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV;
+
+    }
+    public static double angle = 0;
+
+    public void telemetryGroup() {
+        telemetry.addData("frontleft inches", encoderTicksToInches(fl.getCurrentPosition()));
+        telemetry.addLine("the good ones");
+        telemetry.addData("frontright inches", encoderTicksToInches(br.getCurrentPosition()));
+        telemetry.addData("strafe inches", encoderTicksToInches(bl.getCurrentPosition()));
+        telemetry.addData("imu", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+        telemetry.addLine("others");
+        telemetry.addData("outtake velocity", outtake.getVelocity());
+        telemetry.update();
     }
 
     @Override
     public void runOpMode() {
-        telemetry.addData("Status", "Initialized");
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
         fl = hardwareMap.get(DcMotor.class, "fl");
@@ -114,14 +130,17 @@ public class autoFar extends LinearOpMode {
         br1 = hardwareMap.get(ServoImplEx.class, "br1");
         br2 = hardwareMap.get(ServoImplEx.class, "br2");
         br3 = hardwareMap.get(ServoImplEx.class,"br3");
-        waitForStart();
-        telemetry.addData("frontleft", fl.getCurrentPosition());
-        telemetry.addData("frontright", fr.getCurrentPosition());
-        telemetry.addData("backleft", bl.getCurrentPosition());
-        telemetry.addData("frontleft", encoderTicksToInches(fl.getCurrentPosition()));
-        telemetry.addData("frontright", encoderTicksToInches(fr.getCurrentPosition()));
-        telemetry.addData("backleft", encoderTicksToInches(bl.getCurrentPosition()));
-        telemetry.update();
+        imu = hardwareMap.get(IMU.class, "imu");
+        gate = hardwareMap.get(ServoImplEx.class, "gate");
+
+        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
+        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD;
+        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
+        // Now initialize the IMU with this mounting orientation
+        // Note: if you choose two conflicting directions, this initialization will cause a code exception.
+        imu.initialize(new IMU.Parameters(orientationOnRobot));
+        imu.resetYaw();
+
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -134,158 +153,115 @@ public class autoFar extends LinearOpMode {
         // Reverse the direction (flip FORWARD <-> REVERSE ) of any wheel that runs backward
         // Keep testing until ALL the wheels move the robot forward when you push the left joystick forward.
         fl.setDirection(DcMotor.Direction.FORWARD);
-        bl.setDirection(DcMotor.Direction.REVERSE);
+        bl.setDirection(DcMotor.Direction.FORWARD);
         fr.setDirection(DcMotor.Direction.REVERSE);
-        br.setDirection(DcMotor.Direction.FORWARD);
+        br.setDirection(DcMotor.Direction.REVERSE);
+        outtake.setDirection(DcMotor.Direction.REVERSE);
         intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         outtake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         outtake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        fl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        fr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         hood.setDirection(Servo.Direction.FORWARD);
         ur1.setDirection(Servo.Direction.REVERSE);
         ur2.setDirection(Servo.Direction.REVERSE);
 
+        PIDFController outtakePIDF = new PIDFController(1.913819,0.0011,0.2773,0.7); //tuned 3/3/26
+        hood.setPosition(angle);
+        angle = 0.67;
 
-        // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
+        // Wait for the game to start (driver presses START)
         waitForStart();
         runtime.reset();
-        //hood.setPosition(1);
+        //Auto Starts Here
+        //front left deadwheel = fl motor
+        //front right deadwheel = br motor
+        //strafe deadwheel = bl motor
 
 
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
-        //telemetry.addData("Front left/Right", "%4.2f, %4.2f", flPower, frPower);
-        //telemetry.addData("Back  left/Right", "%4.2f, %4.2f", blPower, brPower);
-        telemetry.addData("outtake power", outtake.getVelocity());
-        telemetry.update();
-        while (opModeIsActive() && runtime.seconds() < 5) {
-            fl.setPower(.25);
-            fr.setPower(.25);
-            bl.setPower(.25);
-            br.setPower(.25);
+
+
+        gate.setPosition(0.1);
+        YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
+        br1.setPosition(0.5);
+        br2.setPosition(0.5);
+        ur1.setPosition(0.5);
+        ur2.setPosition(0.5);
+        br3.setPosition(0.85);
+        target = 1300;
+        double velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
+        double speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
+        outtake.setVelocity(speed);
+        hood.setPosition(angle);
+
+
+        while (opModeIsActive() && runtime.seconds() <10.8) {
+            //Nothing here, just waiting for outtake
+            telemetryGroup();
+
         }
-
-        /*while (opModeIsActive() && runtime.seconds() < 10) {
-            if (opModeIsActive()) {
-                ElapsedTime timer = new ElapsedTime();
-
-                // Start motorA immediately
-                outtake.setPower(1);
-
-                // Loop while op mode is active
-                while (opModeIsActive()) {
-                    double elapsed = timer.seconds();
-
-                    // After 5 seconds, start motorB
-                    if (elapsed >= 5.0 && br1.getPosition() != 1) {
-                        br1.setPosition(1);
-                        br1.setPosition(1);
-                        br2.setPosition(1);
-                        ur1.setPosition(.1);
-                        ur2.setPosition(.1);
-                    }
-
-                    // After 1.5 seconds, stop motorB
-                    if (elapsed >= 1.5 && br1.getPosition() != 0.5) {
-                        br1.setPosition(.5);
-                        br1.setPosition(.5);
-                        br2.setPosition(.5);
-                        ur1.setPosition(.5);
-                        ur2.setPosition(.5);
-                    }
-                    // After 5 seconds, start motorB
-                    if (elapsed >= 2 && br1.getPosition() != .35) {
-                        br3.setPosition(0.35);
-                    }
-
-                    // After 1.5 seconds, stop motorB
-                    if (elapsed >= 5 && br1.getPosition() != 0.75) {
-                        br3.setPosition(0.75);
-
-                    }
-
-                    // After 20 seconds, stop motorA
-                    if (elapsed >= 20.0 && outtake.getPower() != 0) {
-                        outtake.setPower(0);
-                    }
-                }
-            }
-        }*/
-        br1.setPosition(.1);
-        br2.setPosition(.1);
-        ur1.setPosition(1);
-        ur2.setPosition(1);
-        br3.setPosition(.1);
         runtime.reset();
+        while (opModeIsActive() && runtime.seconds() < 2) {
+            //+1
+            gate.setPosition(0.2);
+            br3.setPosition(0.52);
+            //Gate opens(touch wall) (0.2 is closed/middle)
+            br1.setPosition(.25);
+            br2.setPosition(.25);
+            ur1.setPosition(.25);
+            ur2.setPosition(.4);
+            telemetryGroup();
+        }
+        runtime.reset();
+        while (opModeIsActive() && runtime.seconds() < .8) {
+            //+1
+            br3.setPosition(0.85);
+            //Gate opens at 0.1/wall + (0.2 is closed/middle)
+            telemetryGroup();
+        }
+        while (opModeIsActive() && runtime.seconds() < 2) {
+            //+1
+            br3.setPosition(0.52);
+            //Gate opens(touch wall) (0.2 is closed/middle)
+            telemetryGroup();
+        }
+        runtime.reset();
+        while (opModeIsActive() && runtime.seconds() < .8) {
+            //+1
+            br3.setPosition(0.85);
+            //Gate opens at 0.1/wall + (0.2 is closed/middle)
+            telemetryGroup();
+        }
+        while (opModeIsActive() && runtime.seconds() < 2) {
+            //+1
+            br3.setPosition(0.52);
+            //Gate opens(touch wall) (0.2 is closed/middle)
+            telemetryGroup();
+        }
+        while (opModeIsActive() && runtime.seconds() < 8) {
+            //+1
+            br3.setPosition(0.85);
+            //Gate opens at 0.1/wall + (0.2 is closed/middle)
+            telemetryGroup();
+        }
+        runtime.reset();
+
+        while (opModeIsActive() && runtime.seconds() < 10) {
+            fl.setPower(-.25);
+            fr.setPower(-.25);
+            bl.setPower(-.25);
+            br.setPower(-.25);
+            telemetryGroup();
+        }
     }
-
-
-
-
-
-
-
-
-
-
-    // run until the end of the match (driver presses STOP)
-
-/*
-            //DRIVE CODE
-            double max;
-
-            // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-            double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
-            double lateral =  gamepad1.left_stick_x;
-            double yaw     =  gamepad1.right_stick_x;
-
-            // Combine the joystick requests for each axis-motion to determine each wheel's power.
-            // Set up a variable for each drive wheel to save the power level for telemetry.
-            double flPower  = axial + lateral + yaw;
-            double frPower = axial - lateral - yaw;
-            double blPower   = axial - lateral + yaw;
-            double brPower  = axial + lateral - yaw;
-
-            // Normalize the values so no wheel power exceeds 100%
-            // This ensures that the robot maintains the desired motion.
-        max = Math.max(Math.abs(flPower), Math.abs(frPower));
-        max = Math.max(max, Math.abs(blPower));
-        max = Math.max(max, Math.abs(brPower));
-
-            if (max > 1.0) {
-                flPower  /= max;
-                frPower /= max;
-                blPower   /= max;
-                brPower  /= max;
-            }
-
-            // This is test code:
-            //
-            // Uncomment the following code to test your motor directions.
-            // Each button should make the corresponding motor run FORWARD.
-            //   1) First get all the motors to take to correct positions on the robot
-            //      by adjusting your Robot Configuration if necessary.
-            //   2) Then make sure they run in the correct direction by modifying the
-            //      the setDirection() calls above.
-            // Once the correct motors move in the correct direction re-comment this code.
-
-            /*
-            frontLeftPower  = gamepad1.x ? 1.0 : 0.0;  // X gamepad
-            backLeftPower   = gamepad1.a ? 1.0 : 0.0;  // A gamepad
-            frontRightPower = gamepad1.y ? 1.0 : 0.0;  // Y gamepad
-            backRightPower  = gamepad1.b ? 1.0 : 0.0;  // B gamepad
-            */
-/*
-            // Send calculated power to wheels
-            fl.setPower(flPower);
-            fr.setPower(frPower);
-            bl.setPower(blPower);
-            br.setPower(brPower);
-*/
-    // Show the elapsed game time and wheel power.
-
 }
-
-

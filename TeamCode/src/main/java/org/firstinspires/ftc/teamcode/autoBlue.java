@@ -90,6 +90,7 @@ public class autoBlue extends LinearOpMode {
     private  ServoImplEx br1 = null;
     private ServoImplEx br2 = null;
     private ServoImplEx br3 = null;
+    private ServoImplEx gate = null;
     public static double target = 0; //ticks
     IMU imu;
     public static double TICKS_PER_REV = 2000;
@@ -127,6 +128,7 @@ public class autoBlue extends LinearOpMode {
         br2 = hardwareMap.get(ServoImplEx.class, "br2");
         br3 = hardwareMap.get(ServoImplEx.class,"br3");
         imu = hardwareMap.get(IMU.class, "imu");
+        gate = hardwareMap.get(ServoImplEx.class, "gate");
 
         RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
         RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD;
@@ -167,6 +169,7 @@ public class autoBlue extends LinearOpMode {
         hood.setDirection(Servo.Direction.FORWARD);
         ur1.setDirection(Servo.Direction.REVERSE);
         ur2.setDirection(Servo.Direction.REVERSE);
+
         PIDFController outtakePIDF = new PIDFController(1.911,.001,.275,.7);//tuned 12-11-25 p= 1.9 i=0.001 d=0.27 f=0.7
 
         telemetry.addData("Status", "Initialized");
@@ -179,31 +182,22 @@ public class autoBlue extends LinearOpMode {
         //front left deadwheel = fl motor
         //front right deadwheel = br motor
         //strafe deadwheel = bl motor
-        /*
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("frontleft", fl.getCurrentPosition());
-        telemetry.addData("frontright", fr.getCurrentPosition());
-        telemetry.addData("backleft", bl.getCurrentPosition());
-        telemetry.addData("frontleft inches", encoderTicksToInches(fl.getCurrentPosition()));
-        telemetry.addData("frontright inches", encoderTicksToInches(fr.getCurrentPosition()));
-        telemetry.addData("backleft inches", encoderTicksToInches(bl.getCurrentPosition()));
-        telemetry.update();
-         */
+
+        gate.setPosition(0.1);
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
         br1.setPosition(0.5);
         br2.setPosition(0.5);
         ur1.setPosition(0.5);
         ur2.setPosition(0.5);
         br3.setPosition(0.85);
-        target = 1200;
         hood.setPosition(.7);
         double velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
         double speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
         outtake.setVelocity(speed);
+        target = 1220;
 
-
-        //Move forward tp shoot pos
-        while(encoderTicksToInches(br.getCurrentPosition())<50&&opModeIsActive()) {
+        //Move forward to shoot pos
+        while(encoderTicksToInches(br.getCurrentPosition())<34&&opModeIsActive()) {
             fl.setPower(.3);
             fr.setPower(.3);
             br.setPower(.3);
@@ -215,7 +209,7 @@ public class autoBlue extends LinearOpMode {
         //need to add
 
         //Turn to line up for spike
-        while(imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)<135&&opModeIsActive()){
+        while(imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)<130&&opModeIsActive()){
             fl.setPower(-.3);
             fr.setPower(.3);
             br.setPower(-.3);
@@ -226,7 +220,7 @@ public class autoBlue extends LinearOpMode {
         }
 
         //Move strafe to line up with spike
-        while(encoderTicksToInches(bl.getCurrentPosition())<7&&opModeIsActive()) {
+        while(encoderTicksToInches(bl.getCurrentPosition())<16&&opModeIsActive()) {
             fl.setPower(.3);
             fr.setPower(-.3);
             br.setPower(-.3);
@@ -237,7 +231,7 @@ public class autoBlue extends LinearOpMode {
         }
 
         //Move to intake from spike
-        while(encoderTicksToInches(br.getCurrentPosition())<35&&opModeIsActive()) {
+        while(encoderTicksToInches(br.getCurrentPosition())<70&&opModeIsActive()) {
             fl.setPower(.3);
             fr.setPower(.3);
             br.setPower(.3);
@@ -249,19 +243,22 @@ public class autoBlue extends LinearOpMode {
             telemetryGroup();
             br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            fl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
         //drive backward to line
-        while(encoderTicksToInches(br.getCurrentPosition())<35&&opModeIsActive()) {
+        while(encoderTicksToInches(fl.getCurrentPosition())<3&&opModeIsActive()) {
             fl.setPower(-.3);
-            fr.setPower(-.3);
-            br.setPower(-.3);
+            fr.setPower(.3);
+            br.setPower(.3);
             bl.setPower(-.3);
             br1.setPosition(.5);
             br2.setPosition(.5);
             ur1.setPosition(.5);
             ur2.setPosition(.5);
             telemetryGroup();
+            telemetry.addLine("should go back now");
             br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
@@ -285,5 +282,60 @@ public class autoBlue extends LinearOpMode {
             bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
+
+
+
+
+        while (opModeIsActive() && runtime.seconds() <1.5) {
+            //Needs +.3 Seconds
+            gate.setPosition(0.1);
+            intake.setVelocity(2000); //in ticks
+            br1.setPosition(.1);
+            br2.setPosition(.1);
+            ur1.setPosition(.1);
+            ur2.setPosition(0.2);
+        }
+        runtime.reset();
+        while (opModeIsActive() && runtime.seconds() < .8) {
+            //+1
+        }
+        while (opModeIsActive() && runtime.seconds() < 2) {
+            //+1
+            gate.setPosition(0.2);
+            br3.setPosition(0.52);
+            //Gate opens(touch wall) (0.2 is closed/middle)
+            br1.setPosition(.25);
+            br2.setPosition(.25);
+            ur1.setPosition(.25);
+            ur2.setPosition(.4);
+        }
+        runtime.reset();
+        while (opModeIsActive() && runtime.seconds() < .8) {
+            //+1
+            br3.setPosition(0.85);
+            //Gate opens at 0.1/wall + (0.2 is closed/middle)
+        }
+        while (opModeIsActive() && runtime.seconds() < 2) {
+            //+1
+            br3.setPosition(0.52);
+            //Gate opens(touch wall) (0.2 is closed/middle)
+        }
+        runtime.reset();
+        while (opModeIsActive() && runtime.seconds() < .8) {
+            //+1
+            br3.setPosition(0.85);
+            //Gate opens at 0.1/wall + (0.2 is closed/middle)
+        }
+        while (opModeIsActive() && runtime.seconds() < 2) {
+            //+1
+            br3.setPosition(0.52);
+            //Gate opens(touch wall) (0.2 is closed/middle)
+        }
+        while (opModeIsActive() && runtime.seconds() < 8) {
+            //+1
+            br3.setPosition(0.85);
+            //Gate opens at 0.1/wall + (0.2 is closed/middle)
+        }
+        runtime.reset();
+        }
     }
-}
