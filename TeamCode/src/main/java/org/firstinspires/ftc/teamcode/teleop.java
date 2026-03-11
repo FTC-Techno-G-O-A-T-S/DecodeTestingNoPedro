@@ -177,7 +177,7 @@ public class teleop extends LinearOpMode {
                 open = true;
             } else{
                 angle = 0.7;
-                gate.setPosition(0.08);
+                gate.setPosition(0.07);
                 open = false;
             }
             //ramp
