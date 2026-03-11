@@ -106,8 +106,10 @@ public class autoBlue extends LinearOpMode {
         telemetry.addData("frontright inches", encoderTicksToInches(br.getCurrentPosition()));
         telemetry.addData("strafe inches", encoderTicksToInches(bl.getCurrentPosition()));
         telemetry.addData("imu", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+        telemetry.addLine("---------");
         telemetry.addLine("others");
         telemetry.addData("outtake velocity", outtake.getVelocity());
+        telemetry.addData("runtime", runtime.seconds());
         telemetry.update();
     }
 
@@ -137,6 +139,7 @@ public class autoBlue extends LinearOpMode {
         // Note: if you choose two conflicting directions, this initialization will cause a code exception.
         imu.initialize(new IMU.Parameters(orientationOnRobot));
         imu.resetYaw();
+        telemetry.addLine("imu ready");
 
 
         // ########################################################################################
@@ -182,6 +185,7 @@ public class autoBlue extends LinearOpMode {
         //front left deadwheel = fl motor
         //front right deadwheel = br motor
         //strafe deadwheel = bl motor
+        //Gate opens at 0.1/wall + (0.2 is closed/middle)
 
         gate.setPosition(0.1);
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
@@ -194,7 +198,7 @@ public class autoBlue extends LinearOpMode {
         double velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
         double speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
         outtake.setVelocity(speed);
-        target = 1220;
+        target = 1200;
 
         //Move forward to shoot pos
         while(encoderTicksToInches(br.getCurrentPosition())<34&&opModeIsActive()) {
@@ -203,10 +207,66 @@ public class autoBlue extends LinearOpMode {
             br.setPower(.3);
             bl.setPower(.3);
             telemetryGroup();
+            imu.resetYaw();
+            velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
+            speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
+            outtake.setVelocity(speed);
+            target = 1200;
         }
+        fl.setPower(0);
+        fr.setPower(0);
+        br.setPower(0);
+        bl.setPower(0);
 
         //Shooting code
-        //need to add
+        //need to add from auto far
+        runtime.reset();
+        while (opModeIsActive() && runtime.seconds() < .8) {
+            //+1
+            br3.setPosition(0.85);
+            velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
+            speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
+            outtake.setVelocity(speed);
+            target = 1200;
+            telemetryGroup();
+        }
+        while (opModeIsActive() && runtime.seconds() < 2) {
+            //+1
+            br3.setPosition(0.52);
+            velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
+            speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
+            outtake.setVelocity(speed);
+            target = 1200;
+            telemetryGroup();
+        }
+        runtime.reset();
+        while (opModeIsActive() && runtime.seconds() < .8) {
+            //+1
+            br3.setPosition(0.85);
+            velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
+            speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
+            outtake.setVelocity(speed);
+            target = 1200;
+            telemetryGroup();
+        }
+        while (opModeIsActive() && runtime.seconds() < 2) {
+            //+1
+            br3.setPosition(0.52);
+            velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
+            speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
+            outtake.setVelocity(speed);
+            target = 1200;
+            telemetryGroup();
+        }
+        while (opModeIsActive() && runtime.seconds() < 3.5) {
+            //+1
+            br3.setPosition(0.85);
+            velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
+            speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
+            outtake.setVelocity(speed);
+            target = 1200;
+            telemetryGroup();
+        }
 
         //Turn to line up for spike
         while(imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)<130&&opModeIsActive()){
@@ -214,9 +274,11 @@ public class autoBlue extends LinearOpMode {
             fr.setPower(.3);
             br.setPower(-.3);
             bl.setPower(.3);
+            gate.setPosition(0.2);
             telemetryGroup();
             bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            target = 0;
         }
 
         //Move strafe to line up with spike
@@ -228,10 +290,11 @@ public class autoBlue extends LinearOpMode {
             telemetryGroup();
             br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            runtime.reset();
         }
 
         //Move to intake from spike
-        while(encoderTicksToInches(br.getCurrentPosition())<70&&opModeIsActive()) {
+        /*while(encoderTicksToInches(br.getCurrentPosition())<20&&opModeIsActive()) {
             fl.setPower(.3);
             fr.setPower(.3);
             br.setPower(.3);
@@ -245,25 +308,36 @@ public class autoBlue extends LinearOpMode {
             br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             fl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        }
-
-        //drive backward to line
-        while(encoderTicksToInches(fl.getCurrentPosition())<3&&opModeIsActive()) {
-            fl.setPower(-.3);
+        }*/
+        while (runtime.seconds() < 1.9 && opModeIsActive()) {
+            fl.setPower(.3);
             fr.setPower(.3);
             br.setPower(.3);
+            bl.setPower(.3);
+            intake.setVelocity(2000);
+            br1.setPosition(.1);
+            br2.setPosition(.1);
+            ur1.setPosition(.1);
+            ur2.setPosition(.1);
+            telemetryGroup();
+            br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+        intake.setVelocity(0);
+        //start 2nd cycle
+        //drive backward to line
+        while(encoderTicksToInches(br.getCurrentPosition())>-25&&opModeIsActive()) {
+            fl.setPower(-.3);
+            fr.setPower(-.3);
+            br.setPower(-.3);
             bl.setPower(-.3);
-            br1.setPosition(.5);
-            br2.setPosition(.5);
-            ur1.setPosition(.5);
-            ur2.setPosition(.5);
             telemetryGroup();
             telemetry.addLine("should go back now");
-            br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
         //strafe to shoot line
-        while(encoderTicksToInches(bl.getCurrentPosition())<7&&opModeIsActive()) {
+        while(encoderTicksToInches(bl.getCurrentPosition())>-16&&opModeIsActive()) {
             fl.setPower(-.3);
             fr.setPower(.3);
             br.setPower(.3);
@@ -271,9 +345,14 @@ public class autoBlue extends LinearOpMode {
             telemetryGroup();
             br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            imu.resetYaw();
+            velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
+            speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
+            outtake.setVelocity(speed);
+            target = 1200;
         }
         //turn to shootpos
-        while(imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)<135&&opModeIsActive()){
+        while(imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)>-140&&opModeIsActive()){
             fl.setPower(.3);
             fr.setPower(-.3);
             br.setPower(.3);
@@ -281,11 +360,17 @@ public class autoBlue extends LinearOpMode {
             telemetryGroup();
             bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
+            speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
+            outtake.setVelocity(speed);
+            target = 1200;
         }
+        fl.setPower(0);
+        fr.setPower(0);
+        br.setPower(0);
+        bl.setPower(0);
 
-
-
-
+        //shoot
         while (opModeIsActive() && runtime.seconds() <1.5) {
             //Needs +.3 Seconds
             gate.setPosition(0.1);
@@ -303,38 +388,56 @@ public class autoBlue extends LinearOpMode {
             //+1
             gate.setPosition(0.2);
             br3.setPosition(0.52);
-            //Gate opens(touch wall) (0.2 is closed/middle)
             br1.setPosition(.25);
             br2.setPosition(.25);
             ur1.setPosition(.25);
             ur2.setPosition(.4);
+            velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
+            speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
+            outtake.setVelocity(speed);
+            target = 1200;
         }
         runtime.reset();
         while (opModeIsActive() && runtime.seconds() < .8) {
             //+1
             br3.setPosition(0.85);
-            //Gate opens at 0.1/wall + (0.2 is closed/middle)
+            velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
+            speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
+            outtake.setVelocity(speed);
+            target = 1200;
         }
         while (opModeIsActive() && runtime.seconds() < 2) {
             //+1
             br3.setPosition(0.52);
-            //Gate opens(touch wall) (0.2 is closed/middle)
+            velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
+            speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
+            outtake.setVelocity(speed);
+            target = 1200;
         }
         runtime.reset();
         while (opModeIsActive() && runtime.seconds() < .8) {
             //+1
             br3.setPosition(0.85);
-            //Gate opens at 0.1/wall + (0.2 is closed/middle)
+            velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
+            speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
+            outtake.setVelocity(speed);
+            target = 1200;
         }
         while (opModeIsActive() && runtime.seconds() < 2) {
             //+1
             br3.setPosition(0.52);
-            //Gate opens(touch wall) (0.2 is closed/middle)
+            velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
+            speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
+            outtake.setVelocity(speed);
+            target = 1200;
         }
         while (opModeIsActive() && runtime.seconds() < 8) {
             //+1
             br3.setPosition(0.85);
-            //Gate opens at 0.1/wall + (0.2 is closed/middle)
+            velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
+            speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
+            outtake.setVelocity(speed);
+            target = 1200;
         }
         runtime.reset();
         }
