@@ -102,7 +102,6 @@ public class autoBlue_runtime extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        telemetry.addData("Status", "Initialized");
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
         fl = hardwareMap.get(DcMotor.class, "fl");
@@ -151,6 +150,7 @@ public class autoBlue_runtime extends LinearOpMode {
 
 
         // Wait for the game to start (driver presses START)
+        telemetry.addLine("by far wall touching the goal");
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 

@@ -140,6 +140,10 @@ public class autoBlue extends LinearOpMode {
         imu.initialize(new IMU.Parameters(orientationOnRobot));
         imu.resetYaw();
         telemetry.addLine("imu ready");
+        telemetry.addLine("run on red side");
+        telemetry.addLine("back on front of goal and tape over launch line");
+
+
 
 
         // ########################################################################################
