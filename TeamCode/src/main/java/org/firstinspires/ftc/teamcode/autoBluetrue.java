@@ -4,7 +4,6 @@ import static com.qualcomm.robotcore.util.Range.clip;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -75,7 +74,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 @Autonomous
-public class autoFar extends LinearOpMode {
+public class autoBluetrue extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
@@ -100,19 +99,17 @@ public class autoFar extends LinearOpMode {
 
     public static double encoderTicksToInches(double ticks) {
         return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV;
-
     }
-    public static double angle = 0;
-    private boolean red = false;
-
     public void telemetryGroup() {
         telemetry.addData("frontleft inches", encoderTicksToInches(fl.getCurrentPosition()));
         telemetry.addLine("the good ones");
         telemetry.addData("frontright inches", encoderTicksToInches(br.getCurrentPosition()));
         telemetry.addData("strafe inches", encoderTicksToInches(bl.getCurrentPosition()));
         telemetry.addData("imu", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+        telemetry.addLine("---------");
         telemetry.addLine("others");
         telemetry.addData("outtake velocity", outtake.getVelocity());
+        telemetry.addData("runtime", runtime.seconds());
         telemetry.update();
     }
 
@@ -142,6 +139,11 @@ public class autoFar extends LinearOpMode {
         // Note: if you choose two conflicting directions, this initialization will cause a code exception.
         imu.initialize(new IMU.Parameters(orientationOnRobot));
         imu.resetYaw();
+        telemetry.addLine("imu ready");
+        telemetry.addLine("run on blue side");
+        telemetry.addLine("back on front of goal and tape over launch line");
+
+
 
 
         // ########################################################################################
@@ -171,26 +173,14 @@ public class autoFar extends LinearOpMode {
         br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         fr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        hood.setDirection(Servo.Direction.FORWARD);
         ur1.setDirection(Servo.Direction.REVERSE);
         ur2.setDirection(Servo.Direction.REVERSE);
 
-        PIDFController outtakePIDF = new PIDFController(1.913819,0.0011,0.2773,0.7); //tuned 3/3/26
+        PIDFController outtakePIDF = new PIDFController(1.911,.001,.275,.7);//tuned 12-11-25 p= 1.9 i=0.001 d=0.27 f=0.7
 
-        while(gamepad1.left_bumper) {
-            telemetry.addData("x or square: ", "blue");
-            telemetry.addData("b or circle: ", "red");
-            telemetry.update();
-            if (gamepad1.x) {
-                red = false;
-            }
-            if (gamepad1.b) {
-                red = true;
-            }
-        }
-        telemetry.addData("Status", "Initialized");
-        telemetry.addData("red side? ", red);
-        telemetry.update();
-
+        gate.setPosition(0.16);
+        br3.setPosition(0.85);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -202,46 +192,255 @@ public class autoFar extends LinearOpMode {
         //front right deadwheel = br motor
         //strafe deadwheel = bl motor
 
-        gate.setPosition(0.1);
+
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
         br1.setPosition(0.5);
         br2.setPosition(0.5);
         ur1.setPosition(0.5);
         ur2.setPosition(0.5);
         br3.setPosition(0.85);
-        /*target = 1300;
+        hood.setPosition(.7);
         double velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
         double speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
         outtake.setVelocity(speed);
-        hood.setPosition(angle);
-        */
-        if(red == true){
-            while(encoderTicksToInches(bl.getCurrentPosition())<28&&opModeIsActive()) {
-                fl.setPower(.3);
-                fr.setPower(-.3);
-                br.setPower(-.3);
-                bl.setPower(.3);
-                telemetryGroup();
-            }
-            fl.setPower(0);
-            fr.setPower(0);
-            br.setPower(0);
-            bl.setPower(0);
+        target = 1200;
 
+        //Move forward to shoot pos
+        while(encoderTicksToInches(br.getCurrentPosition())<34&&opModeIsActive()) {
+            fl.setPower(.3);
+            fr.setPower(.3);
+            br.setPower(.3);
+            bl.setPower(.3);
+            telemetryGroup();
+            imu.resetYaw();
+            velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
+            speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
+            outtake.setVelocity(speed);
+            target = 1200;
         }
-        if(red == false){
-            while(encoderTicksToInches(bl.getCurrentPosition())>-28&&opModeIsActive()) {
-                fl.setPower(-.3);
-                fr.setPower(.3);
-                br.setPower(.3);
-                bl.setPower(-.3);
-                telemetryGroup();
-            }
-            fl.setPower(0);
-            fr.setPower(0);
-            br.setPower(0);
-            bl.setPower(0);
+        fl.setPower(0);
+        fr.setPower(0);
+        br.setPower(0);
+        bl.setPower(0);
 
+        //Shooting code
+        runtime.reset();
+        while (opModeIsActive() && runtime.seconds() < 1) {
+            ur2.setPosition(0.1);
+            br3.setPosition(0.52);
+            br1.setPosition(.5);
+            br2.setPosition(.5);
+            ur1.setPosition(.5);
+            ur2.setPosition(.5);
+            velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
+            speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
+            outtake.setVelocity(speed);
+            target = 1200;
+            telemetryGroup();
         }
+        while (opModeIsActive() && runtime.seconds() < 2) {
+            ur2.setPosition(0.5);
+            br3.setPosition(0.85);
+            br1.setPosition(.1);
+            br2.setPosition(.1);
+            ur1.setPosition(.1);
+            ur2.setPosition(.1);
+            velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
+            speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
+            outtake.setVelocity(speed);
+            target = 1200;
+            telemetryGroup();
+        }
+        runtime.reset();
+        while (opModeIsActive() && runtime.seconds() < 1) {
+            ur2.setPosition(0.1);
+            br3.setPosition(0.52);
+            br1.setPosition(.5);
+            br2.setPosition(.5);
+            ur1.setPosition(.5);
+            ur2.setPosition(.5);
+            velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
+            speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
+            outtake.setVelocity(speed);
+            target = 1200;
+            telemetryGroup();
+        }
+        while (opModeIsActive() && runtime.seconds() < 2) {
+            ur2.setPosition(0.5);
+            br3.setPosition(0.85);
+            br2.setPosition(.1);
+            ur1.setPosition(.1);
+            ur2.setPosition(.1);
+            velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
+            speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
+            outtake.setVelocity(speed);
+            target = 1200;
+            telemetryGroup();
+        }
+        while (opModeIsActive() && runtime.seconds() < 3.5) {
+            ur2.setPosition(0.1);
+            br3.setPosition(0.52);
+            br1.setPosition(.5);
+            br2.setPosition(.5);
+            ur1.setPosition(.5);
+            ur2.setPosition(.5);
+            velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
+            speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
+            outtake.setVelocity(speed);
+            target = 1200;
+            telemetryGroup();
+        } //end shoot code
+
+        //Turn to line up for spike
+        while(imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)>-142&&opModeIsActive()){
+            fl.setPower(.3);
+            fr.setPower(-.3);
+            br.setPower(.3);
+            bl.setPower(-.3);
+            gate.setPosition(0.16);
+            br3.setPosition(0.85);
+            telemetryGroup();
+            bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            target = 0;
+        }
+
+        //Move strafe to line up with spike
+        while(encoderTicksToInches(bl.getCurrentPosition())>-16&&opModeIsActive()) {
+            fl.setPower(-.3);
+            fr.setPower(.3);
+            br.setPower(.3);
+            bl.setPower(-.3);
+            telemetryGroup();
+            br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            runtime.reset();
+        }
+
+        //Move to intake from spike
+        while (runtime.seconds() < 1.9 && opModeIsActive()) {
+            fl.setPower(.3);
+            fr.setPower(.3);
+            br.setPower(.3);
+            bl.setPower(.3);
+            intake.setVelocity(2000);
+            br1.setPosition(.1);
+            br2.setPosition(.1);
+            ur1.setPosition(.1);
+            ur2.setPosition(.1);
+            telemetryGroup();
+            br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+        intake.setVelocity(0);
+        /* remove 2nd cycle
+        //start 2nd cycle
+        //drive backward to line
+        while(encoderTicksToInches(br.getCurrentPosition())>-25&&opModeIsActive()) {
+            fl.setPower(-.3);
+            fr.setPower(-.3);
+            br.setPower(-.3);
+            bl.setPower(-.3);
+            telemetryGroup();
+            telemetry.addLine("should go back now");
+            bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+        //strafe to shoot line
+        while(encoderTicksToInches(bl.getCurrentPosition())>-16&&opModeIsActive()) {
+            fl.setPower(-.3);
+            fr.setPower(.3);
+            br.setPower(.3);
+            bl.setPower(-.3);
+            telemetryGroup();
+            br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            imu.resetYaw();
+            velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
+            speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
+            outtake.setVelocity(speed);
+            target = 1200;
+        }
+        //turn to shootpos
+        while(imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)>-140&&opModeIsActive()){
+            fl.setPower(.3);
+            fr.setPower(-.3);
+            br.setPower(.3);
+            bl.setPower(-.3);
+            telemetryGroup();
+            bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
+            speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
+            outtake.setVelocity(speed);
+            target = 1200;
+        }
+        fl.setPower(0);
+        fr.setPower(0);
+        br.setPower(0);
+        bl.setPower(0);
+
+        //shoot
+        while (opModeIsActive() && runtime.seconds() <1.5) {
+            //Needs +.3 Seconds
+            gate.setPosition(0.16);
+            //intake.setVelocity(2000); //in ticks
+            br1.setPosition(.1);
+            br2.setPosition(.1);
+            ur1.setPosition(.1);
+            ur2.setPosition(0.2);
+        }
+        runtime.reset();
+        while (opModeIsActive() && runtime.seconds() < .8) {
+        }
+        while (opModeIsActive() && runtime.seconds() < 2) {
+            gate.setPosition(0.2);
+            br3.setPosition(0.52);
+            br1.setPosition(.25);
+            br2.setPosition(.25);
+            ur1.setPosition(.25);
+            ur2.setPosition(.4);
+            velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
+            speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
+            outtake.setVelocity(speed);
+            target = 1200;
+        }
+        runtime.reset();
+        while (opModeIsActive() && runtime.seconds() < .8) {
+            br3.setPosition(0.85);
+            velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
+            speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
+            outtake.setVelocity(speed);
+            target = 1200;
+        }
+        while (opModeIsActive() && runtime.seconds() < 2) {
+            br3.setPosition(0.52);
+            velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
+            speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
+            outtake.setVelocity(speed);
+            target = 1200;
+        }
+        runtime.reset();
+        while (opModeIsActive() && runtime.seconds() < .8) {
+            br3.setPosition(0.85);
+            velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
+            speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
+            outtake.setVelocity(speed);
+            target = 1200;
+        }
+        while (opModeIsActive() && runtime.seconds() < 2) {
+            br3.setPosition(0.52);
+            velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
+            speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
+            outtake.setVelocity(speed);
+            target = 1200;
+        }
+        while (opModeIsActive() && runtime.seconds() < 8) {
+            br3.setPosition(0.85);
+            velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
+            speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
+            outtake.setVelocity(speed);
+            target = 1200;
+        }*/
     }
 }

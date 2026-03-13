@@ -34,15 +34,19 @@ import static com.qualcomm.robotcore.util.Range.clip;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.controller.PIDFController;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 
 /*
@@ -93,6 +97,7 @@ public class teleop extends LinearOpMode {
     private ServoImplEx br3 = null;
     private Servo light = null;
     private Servo gate = null;
+    private IMU imu = null;
     public static double out = 0;
 
     public static double target = 0; //ticks
@@ -126,6 +131,15 @@ public class teleop extends LinearOpMode {
         br3 = hardwareMap.get(ServoImplEx.class,"br3");
         light = hardwareMap.get(Servo.class, "light");
         gate = hardwareMap.get(Servo.class, "gate");
+
+        imu = hardwareMap.get(IMU.class, "imu");
+        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
+        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD;
+        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
+        // Now initialize the IMU with this mounting orientation
+        // Note: if you choose two conflicting directions, this initialization will cause a code exception.
+        imu.initialize(new IMU.Parameters(orientationOnRobot));
+        imu.resetYaw();
 
 
         // ########################################################################################
@@ -278,7 +292,7 @@ public class teleop extends LinearOpMode {
             double axial;   //= -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
             double lateral; //=  gamepad1.left_stick_x;
             double yaw;     //=  gamepad1.right_stick_x;
-            if(gamepad1.right_trigger > 0.2) {
+            if(gamepad1.right_trigger > 0.4) {
                 axial = -gamepad1.left_stick_y * 1;
                 yaw = gamepad1.left_stick_x * 1;
                 lateral = gamepad1.right_stick_x * 0.25;
@@ -346,6 +360,7 @@ public class teleop extends LinearOpMode {
             //telemetry.addData("left dead wheel", fl.getCurrentPosition());
             //telemetry.addData("right dead wheel", br.getCurrentPosition());
             //telemetry.addData("strafe dead wheel", bl.getCurrentPosition());
+            telemetry.addData("imu", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
             telemetry.update();
         }
     }
