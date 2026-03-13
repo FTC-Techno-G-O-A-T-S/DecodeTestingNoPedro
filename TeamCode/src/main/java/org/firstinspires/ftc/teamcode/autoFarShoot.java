@@ -8,12 +8,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.seattlesolvers.solverslib.controller.PIDFController;
-
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
@@ -75,7 +74,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 @Autonomous
-public class autoFar extends LinearOpMode {
+@Disabled
+public class autoFarShoot extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
@@ -170,11 +170,13 @@ public class autoFar extends LinearOpMode {
         br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         fr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        hood.setDirection(Servo.Direction.FORWARD);
         ur1.setDirection(Servo.Direction.REVERSE);
         ur2.setDirection(Servo.Direction.REVERSE);
 
         PIDFController outtakePIDF = new PIDFController(1.913819,0.0011,0.2773,0.7); //tuned 3/3/26
-
+        hood.setPosition(angle);
+        angle = 0.67;
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -187,6 +189,9 @@ public class autoFar extends LinearOpMode {
         //front right deadwheel = br motor
         //strafe deadwheel = bl motor
 
+
+
+
         gate.setPosition(0.1);
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
         br1.setPosition(0.5);
@@ -194,23 +199,70 @@ public class autoFar extends LinearOpMode {
         ur1.setPosition(0.5);
         ur2.setPosition(0.5);
         br3.setPosition(0.85);
-        /*target = 1300;
+        target = 1300;
         double velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
         double speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
         outtake.setVelocity(speed);
         hood.setPosition(angle);
-        */
-        while(encoderTicksToInches(bl.getCurrentPosition())<28&&opModeIsActive()) {
-            fl.setPower(.3);
-            fr.setPower(-.3);
-            br.setPower(-.3);
-            bl.setPower(.3);
+
+
+        while (opModeIsActive() && runtime.seconds() <10.8) {
+            //Nothing here, just waiting for outtake
+            telemetryGroup();
+
+        }
+        runtime.reset();
+        while (opModeIsActive() && runtime.seconds() < 2) {
+            //+1
+            gate.setPosition(0.2);
+            br3.setPosition(0.52);
+            //Gate opens(touch wall) (0.2 is closed/middle)
+            br1.setPosition(.25);
+            br2.setPosition(.25);
+            ur1.setPosition(.25);
+            ur2.setPosition(.4);
             telemetryGroup();
         }
-        fl.setPower(0);
-        fr.setPower(0);
-        br.setPower(0);
-        bl.setPower(0);
+        runtime.reset();
+        while (opModeIsActive() && runtime.seconds() < .8) {
+            //+1
+            br3.setPosition(0.85);
+            //Gate opens at 0.1/wall + (0.2 is closed/middle)
+            telemetryGroup();
+        }
+        while (opModeIsActive() && runtime.seconds() < 2) {
+            //+1
+            br3.setPosition(0.52);
+            //Gate opens(touch wall) (0.2 is closed/middle)
+            telemetryGroup();
+        }
+        runtime.reset();
+        while (opModeIsActive() && runtime.seconds() < .8) {
+            //+1
+            br3.setPosition(0.85);
+            //Gate opens at 0.1/wall + (0.2 is closed/middle)
+            telemetryGroup();
+        }
+        while (opModeIsActive() && runtime.seconds() < 2) {
+            //+1
+            br3.setPosition(0.52);
+            //Gate opens(touch wall) (0.2 is closed/middle)
+            telemetryGroup();
+        }
+        while (opModeIsActive() && runtime.seconds() < 8) {
+            //+1
+            br3.setPosition(0.85);
+            //Gate opens at 0.1/wall + (0.2 is closed/middle)
+            telemetryGroup();
+        }
+        runtime.reset();
 
+        while (opModeIsActive() && runtime.seconds() < 10) {
+            fl.setPower(-.25);
+            fr.setPower(-.25);
+            bl.setPower(-.25);
+            br.setPower(-.25);
+            telemetryGroup();
+        }
     }
 }

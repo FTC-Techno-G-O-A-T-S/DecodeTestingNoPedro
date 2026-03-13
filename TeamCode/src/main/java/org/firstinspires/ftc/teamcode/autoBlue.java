@@ -179,6 +179,8 @@ public class autoBlue extends LinearOpMode {
 
         PIDFController outtakePIDF = new PIDFController(1.911,.001,.275,.7);//tuned 12-11-25 p= 1.9 i=0.001 d=0.27 f=0.7
 
+        gate.setPosition(0.16);
+        br3.setPosition(0.85);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -190,7 +192,7 @@ public class autoBlue extends LinearOpMode {
         //front right deadwheel = br motor
         //strafe deadwheel = bl motor
 
-        gate.setPosition(0.07);
+
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
         br1.setPosition(0.5);
         br2.setPosition(0.5);
@@ -222,10 +224,14 @@ public class autoBlue extends LinearOpMode {
         bl.setPower(0);
 
         //Shooting code
-        //need to add from auto far
         runtime.reset();
-        while (opModeIsActive() && runtime.seconds() < .8) {
-            br3.setPosition(0.85);
+        while (opModeIsActive() && runtime.seconds() < 1) {
+            ur2.setPosition(0.1);
+            br3.setPosition(0.52);
+            br1.setPosition(.5);
+            br2.setPosition(.5);
+            ur1.setPosition(.5);
+            ur2.setPosition(.5);
             velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
             speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
             outtake.setVelocity(speed);
@@ -233,7 +239,12 @@ public class autoBlue extends LinearOpMode {
             telemetryGroup();
         }
         while (opModeIsActive() && runtime.seconds() < 2) {
-            br3.setPosition(0.52);
+            ur2.setPosition(0.5);
+            br3.setPosition(0.85);
+            br1.setPosition(.1);
+            br2.setPosition(.1);
+            ur1.setPosition(.1);
+            ur2.setPosition(.1);
             velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
             speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
             outtake.setVelocity(speed);
@@ -241,8 +252,13 @@ public class autoBlue extends LinearOpMode {
             telemetryGroup();
         }
         runtime.reset();
-        while (opModeIsActive() && runtime.seconds() < .8) {
-            br3.setPosition(0.85);
+        while (opModeIsActive() && runtime.seconds() < 1) {
+            ur2.setPosition(0.1);
+            br3.setPosition(0.52);
+            br1.setPosition(.5);
+            br2.setPosition(.5);
+            ur1.setPosition(.5);
+            ur2.setPosition(.5);
             velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
             speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
             outtake.setVelocity(speed);
@@ -250,7 +266,11 @@ public class autoBlue extends LinearOpMode {
             telemetryGroup();
         }
         while (opModeIsActive() && runtime.seconds() < 2) {
-            br3.setPosition(0.52);
+            ur2.setPosition(0.5);
+            br3.setPosition(0.85);
+            br2.setPosition(.1);
+            ur1.setPosition(.1);
+            ur2.setPosition(.1);
             velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
             speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
             outtake.setVelocity(speed);
@@ -258,7 +278,12 @@ public class autoBlue extends LinearOpMode {
             telemetryGroup();
         }
         while (opModeIsActive() && runtime.seconds() < 3.5) {
-            br3.setPosition(0.85);
+            ur2.setPosition(0.1);
+            br3.setPosition(0.52);
+            br1.setPosition(.5);
+            br2.setPosition(.5);
+            ur1.setPosition(.5);
+            ur2.setPosition(.5);
             velocity = outtakePIDF.calculate(outtake.getVelocity(), target);
             speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
             outtake.setVelocity(speed);
@@ -273,6 +298,7 @@ public class autoBlue extends LinearOpMode {
             br.setPower(-.3);
             bl.setPower(.3);
             gate.setPosition(0.16);
+            br3.setPosition(0.85);
             telemetryGroup();
             bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -307,6 +333,7 @@ public class autoBlue extends LinearOpMode {
             br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
         intake.setVelocity(0);
+        /* remove 2nd cycle
         //start 2nd cycle
         //drive backward to line
         while(encoderTicksToInches(br.getCurrentPosition())>-25&&opModeIsActive()) {
@@ -414,6 +441,6 @@ public class autoBlue extends LinearOpMode {
             speed = clip(velocity, 0, 2600); //may need to be higher to give more room for pidf
             outtake.setVelocity(speed);
             target = 1200;
-        }
+        }*/
     }
 }
